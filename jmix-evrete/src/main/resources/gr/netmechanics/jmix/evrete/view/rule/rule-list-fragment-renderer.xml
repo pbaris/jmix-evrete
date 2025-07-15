@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<fragment xmlns="http://jmix.io/schema/flowui/fragment">
+	<data>
+		<instance id="ruleDc" class="gr.netmechanics.jmix.evrete.entity.Rule">
+			<loader id="ruleDl"/>
+			<fetchPlan extends="_base"/>
+		</instance>
+	</data>
+	<content>
+		<vbox id="root" padding="false" themeNames="spacing-s">
+			<div property="name" dataContainer="ruleDc"/>
+			<hbox width="100%" alignItems="CENTER">
+				<div>
+					<span text="msg://gr.netmechanics.jmix.evrete.entity/Rule.priority" classNames="text-s text-secondary"/>
+					<span text=": " classNames="text-s text-secondary"/>
+					<span property="priority" dataContainer="ruleDc" classNames="text-s text-secondary"/>
+				</div>
+				<div classNames="mx-auto"/>
+				<div id="activePlaceholder"/>
+			</hbox>
+			<hr classNames="p-0 m-0"/>
+		</vbox>
+	</content>
+</fragment>

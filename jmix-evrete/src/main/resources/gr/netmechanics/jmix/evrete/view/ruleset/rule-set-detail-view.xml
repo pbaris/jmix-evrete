@@ -11,6 +11,9 @@
 			<loader id="ruleSetDl"/>
 			<collection id="rulesDc" property="rules"/>
 		</instance>
+		<instance id="ruleDc" class="gr.netmechanics.jmix.evrete.entity.Rule">
+			<fetchPlan extends="_base"/>
+		</instance>
 	</data>
 	<facets>
 		<dataLoadCoordinator auto="true"/>
@@ -19,24 +22,46 @@
 		<action id="saveAction" type="detail_saveClose"/>
 		<action id="closeAction" type="detail_close"/>
 	</actions>
-	<layout>
-		<formLayout id="form" dataContainer="ruleSetDc">
-			<responsiveSteps>
-				<responsiveStep minWidth="0" columns="1"/>
-				<responsiveStep minWidth="40em" columns="2"/>
-			</responsiveSteps>
-			<textField id="nameField" property="name"/>
-			<textField id="descriptionField" property="description"/>
-			<select id="defaultSortField" property="defaultSort"/>
-			<checkbox id="activeField" property="active"/>
-		</formLayout>
-		<h4 text="msg://gr.netmechanics.jmix.evrete.entity/RuleSet.rules"/>
-		<hbox id="rulesButtonsPanel" classNames="buttons-panel">
-			<button action="rulesDataGrid.createAction"/>
-			<button action="rulesDataGrid.editAction"/>
-			<button action="rulesDataGrid.removeAction"/>
+	<layout expand="mainLayout">
+		<div id="mainLayout" width="100%" classNames="evrete-rule-grid grid grid-cols-4 gap-l box-border overflow-auto">
+			<tabSheet id="ruleSetTabSheet" themeNames="small bordered" classNames="col-span-3">
+				<tab id="ruleSetProperties" label="msg://ruleSetDetailView.tab.properties">
+					<formLayout id="form" dataContainer="ruleSetDc">
+						<responsiveSteps>
+							<responsiveStep minWidth="0" columns="1"/>
+							<responsiveStep minWidth="40em" columns="3"/>
+						</responsiveSteps>
+						<textField id="nameField" property="name" colspan=""/>
+						<select id="defaultSortField" property="defaultSort"/>
+						<switch id="activeField" property="active"/>
+						<textArea id="descriptionField" property="description" colspan="3" height="10em"/>
+					</formLayout>
+				</tab>
+				<tab id="ruleEditor" label="msg://ruleSetDetailView.tab.ruleEditor">
+					<fragment class="com.company.test_2_6.view.rule.RuleDetailFragment"/>
+				</tab>
+			</tabSheet>
+
+			<accordion height="100%" classNames="box-border overflow-auto">
+				<accordionPanel summaryText="msg://ruleSetDetailView.rules.header" classNames="border rounded rounded-l box-border px-s">
+					<hbox id="rulesButtonsPanel" classNames="buttons-panel" justifyContent="CENTER">
+						<button action="rulesDataGrid.createAction" themeNames="tertiary small"/>
+						<button action="rulesDataGrid.editAction" themeNames="tertiary small"/>
+						<button action="rulesDataGrid.removeAction" themeNames="tertiary small"/>
+					</hbox>
+					<listBox id="rulesListBox" itemsContainer="rulesDc">
+						<fragmentRenderer class="com.company.test_2_6.view.rule.RuleListFragmentRenderer"/>
+					</listBox>
+				</accordionPanel>
+			</accordion>
+		</div>
+		<hbox id="detailActions">
+			<button id="saveAndCloseButton" action="saveAction"/>
+			<button id="closeButton" action="closeAction"/>
 		</hbox>
-		<dataGrid id="rulesDataGrid" dataContainer="rulesDc" width="100%" minHeight="20em">
+
+		<!-- hidden but handles the listBox item selection -->
+		<dataGrid id="rulesDataGrid" dataContainer="rulesDc" width="100%" minHeight="20em" visible="false">
 			<actions>
 				<action id="createAction" type="list_create">
 					<properties>
@@ -50,15 +75,6 @@
 				</action>
 				<action id="removeAction" type="list_remove"/>
 			</actions>
-			<columns>
-				<column property="name"/>
-				<column property="priority"/>
-				<column property="active"/>
-			</columns>
 		</dataGrid>
-		<hbox id="detailActions">
-			<button id="saveAndCloseButton" action="saveAction"/>
-			<button id="closeButton" action="closeAction"/>
-		</hbox>
 	</layout>
 </view>
