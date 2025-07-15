@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+	  title="msg://ruleSetListView.title"
+	  focusComponent="ruleSetsDataGrid">
+	<data>
+		<collection id="ruleSetsDc"
+					class="gr.netmechanics.jmix.evrete.entity.RuleSet">
+			<fetchPlan extends="_base"/>
+			<loader id="ruleSetsDl" readOnly="true">
+				<query>
+					<![CDATA[select e from evrete_RuleSet e order by e.name]]>
+				</query>
+			</loader>
+		</collection>
+	</data>
+	<facets>
+		<dataLoadCoordinator auto="true"/>
+		<urlQueryParameters>
+			<pagination component="pagination"/>
+		</urlQueryParameters>
+	</facets>
+	<actions>
+		<action id="selectAction" type="lookup_select"/>
+		<action id="discardAction" type="lookup_discard"/>
+	</actions>
+	<layout>
+		<hbox id="buttonsPanel" classNames="buttons-panel">
+			<button id="createButton" action="ruleSetsDataGrid.createAction"/>
+			<button id="editButton" action="ruleSetsDataGrid.editAction"/>
+			<button id="removeButton" action="ruleSetsDataGrid.removeAction"/>
+			<simplePagination id="pagination" dataLoader="ruleSetsDl"/>
+		</hbox>
+		<dataGrid id="ruleSetsDataGrid"
+				  width="100%"
+				  minHeight="20em"
+				  dataContainer="ruleSetsDc">
+			<actions>
+				<action id="createAction" type="list_create"/>
+				<action id="editAction" type="list_edit"/>
+				<action id="removeAction" type="list_remove"/>
+			</actions>
+			<columns>
+				<column property="name" autoWidth="true"/>
+				<column property="description" autoWidth="true"/>
+				<column property="defaultSort" autoWidth="true"/>
+				<column property="active" autoWidth="true"/>
+			</columns>
+		</dataGrid>
+		<hbox id="lookupActions" visible="false">
+			<button id="selectButton" action="selectAction"/>
+			<button id="discardButton" action="discardAction"/>
+		</hbox>
+	</layout>
+</view>

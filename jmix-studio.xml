@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="IgnoredChangelogIncludeConfig">
+    <datastore-include-infos>
+      <datastore-include-info datastore-name="main">
+        <ignored-missing-paths>
+          <ignored-path path="/io/jmix/data/liquibase/changelog.xml" />
+          <ignored-path path="/io/jmix/flowuidata/liquibase/changelog.xml" />
+        </ignored-missing-paths>
+      </datastore-include-info>
+    </datastore-include-infos>
+  </component>
+  <component name="JmixDataStoreSettingsManager">
+    <moduleSettings>
+      <entry key="jmix-evrete-addon.jmix-evrete.main">
+        <ModuleSettings>
+          <option name="dataStoreOptionsV2">
+            <map>
+              <entry key="main">
+                <value>
+                  <DataStoreSettingsV2>
+                    <option name="generateDdlType" value="CREATE_AND_UPDATE" />
+                    <option name="supportedTypes">
+                      <option value="postgres" />
+                    </option>
+                  </DataStoreSettingsV2>
+                </value>
+              </entry>
+            </map>
+          </option>
+          <option name="dataStores">
+            <map>
+              <entry key="main">
+                <value>
+                  <DataStore>
+                    <SavedDbProperties>
+                      <option name="databaseName" value="evrete" />
+                      <option name="dbType" value="postgres" />
+                      <option name="dbmsVersion" />
+                      <option name="host" value="localhost" />
+                      <option name="pass" value="mb955213a1e" />
+                      <option name="url" value="jdbc:postgresql://localhost/evrete" />
+                      <option name="user" value="postgres" />
+                    </SavedDbProperties>
+                  </DataStore>
+                </value>
+              </entry>
+            </map>
+          </option>
+        </ModuleSettings>
+      </entry>
+    </moduleSettings>
+  </component>
+</project>
