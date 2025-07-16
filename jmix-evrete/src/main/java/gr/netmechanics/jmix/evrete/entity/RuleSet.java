@@ -6,8 +6,6 @@ import java.util.UUID;
 
 import gr.netmechanics.jmix.evrete.entity.trait.HasActive;
 import io.jmix.core.DeletePolicy;
-import io.jmix.core.annotation.DeletedBy;
-import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.entity.annotation.OnDelete;
 import io.jmix.core.metamodel.annotation.Composition;
@@ -84,14 +82,6 @@ public class RuleSet implements HasActive {
     @LastModifiedDate
     @Column(name = "LAST_MODIFIED_DATE")
     private Date lastModifiedDate;
-
-    @DeletedBy
-    @Column(name = "DELETED_BY")
-    private String deletedBy;
-
-    @DeletedDate
-    @Column(name = "DELETED_DATE")
-    private Date deletedDate;
 
     public RuleSort getDefaultSort() {
         return defaultSort == null ? null : RuleSort.fromId(defaultSort);

@@ -5,8 +5,6 @@ import java.util.UUID;
 
 import gr.netmechanics.jmix.evrete.entity.trait.HasActive;
 import io.jmix.core.DeletePolicy;
-import io.jmix.core.annotation.DeletedBy;
-import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.entity.annotation.OnDeleteInverse;
 import io.jmix.core.metamodel.annotation.InstanceName;
@@ -66,6 +64,9 @@ public class Rule implements HasActive {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private RuleSet ruleSet;
 
+    @Column(name = "RULE_CONDITION")
+    private RuleCondition ruleCondition;
+
     @Version
     @Column(name = "VERSION", nullable = false)
     private Integer version;
@@ -85,13 +86,4 @@ public class Rule implements HasActive {
     @LastModifiedDate
     @Column(name = "LAST_MODIFIED_DATE")
     private Date lastModifiedDate;
-
-    @DeletedBy
-    @Column(name = "DELETED_BY")
-    private String deletedBy;
-
-    @DeletedDate
-    @Column(name = "DELETED_DATE")
-    private Date deletedDate;
-
 }

@@ -23,8 +23,8 @@ import io.jmix.flowui.view.ViewDescriptor;
 /**
  * @author Panos Bariamis (pbaris)
  */
-@Route(value = "rule-sets2/:id", layout = DefaultMainViewParent.class)
-@ViewController(id = "evrete_RuleSet.detail2")
+@Route(value = "rule-sets/:id", layout = DefaultMainViewParent.class)
+@ViewController(id = "evrete_RuleSet.detail")
 @ViewDescriptor(path = "rule-set-detail-view.xml")
 @EditedEntityContainer("ruleSetDc")
 @PrimaryDetailView(RuleSet.class)

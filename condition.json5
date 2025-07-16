@@ -1,0 +1,15 @@
+{
+	"id": "e802b32a-bd24-4a73-81a4-e168c8738dda",
+	"params": [
+		{
+			// R: canonical name of the class e.g. java.lang.String
+			"paramClass": "java.lang.String",
+
+			// R: fact name
+			"paramName": "$s"
+		}
+	],
+
+	// R: where clauses
+	"where": ["$s.equals(\"Test\")"]
+}

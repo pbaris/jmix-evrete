@@ -17,15 +17,14 @@
 			<column name="RULE_SET_ID" type="UUID">
 				<constraints nullable="false"/>
 			</column>
+			<column name="RULE_CONDITION" type="CLOB"/>
 			<column name="VERSION" type="INT">
 				<constraints nullable="false"/>
 			</column>
 			<column name="CREATED_BY" type="VARCHAR(255)"/>
-			<column name="CREATED_DATE" type="datetime"/>
+			<column name="CREATED_DATE" type="DATETIME"/>
 			<column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
-			<column name="LAST_MODIFIED_DATE" type="datetime"/>
-			<column name="DELETED_BY" type="VARCHAR(255)"/>
-			<column name="DELETED_DATE" type="datetime"/>
+			<column name="LAST_MODIFIED_DATE" type="DATETIME"/>
 		</createTable>
 	</changeSet>
 	<changeSet id="2" author="evrete">
@@ -45,11 +44,9 @@
 				<constraints nullable="false"/>
 			</column>
 			<column name="CREATED_BY" type="VARCHAR(255)"/>
-			<column name="CREATED_DATE" type="datetime"/>
+			<column name="CREATED_DATE" type="DATETIME"/>
 			<column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
-			<column name="LAST_MODIFIED_DATE" type="datetime"/>
-			<column name="DELETED_BY" type="VARCHAR(255)"/>
-			<column name="DELETED_DATE" type="datetime"/>
+			<column name="LAST_MODIFIED_DATE" type="DATETIME"/>
 		</createTable>
 	</changeSet>
 	<changeSet id="3" author="evrete">
@@ -58,6 +55,6 @@
 		</createIndex>
 
 		<addForeignKeyConstraint baseColumnNames="RULE_SET_ID" baseTableName="EVRETE_RULE" constraintName="FK_EVRETE_RULE_ON_RULE_SET"
-								 referencedColumnNames="ID" referencedTableName="EVRETE_RULE_SET"/>
+								 onDelete="CASCADE" referencedColumnNames="ID" referencedTableName="EVRETE_RULE_SET"/>
 	</changeSet>
 </databaseChangeLog>

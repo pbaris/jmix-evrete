@@ -1,6 +1,7 @@
 package gr.netmechanics.jmix.evrete.role;
 
 import gr.netmechanics.jmix.evrete.entity.Rule;
+import gr.netmechanics.jmix.evrete.entity.RuleConditionParameter;
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
 import io.jmix.security.model.EntityAttributePolicyAction;
 import io.jmix.security.model.EntityPolicyAction;
@@ -13,13 +14,14 @@ import io.jmix.securityflowui.role.annotation.ViewPolicy;
 /**
  * @author Panos Bariamis (pbaris)
  */
+@SuppressWarnings("checkstyle:LineLength")
 @ResourceRole(name = "Evrete: Administrator", code = EvreteAdministratorRole.CODE, scope = "UI")
 public interface EvreteAdministratorRole {
 
     String CODE = "evrete-admin";
 
     @MenuPolicy(menuIds = "evrete_RuleSet.list")
-    @ViewPolicy(viewIds = {"evrete_RuleSet.list", "evrete_RuleSet.detail"})
+    @ViewPolicy(viewIds = {"evrete_RuleSet.list", "evrete_RuleSet.detail", "RuleDetailFragment", "RuleListFragmentRenderer", "evrete_Rule.detail"})
     void screens();
 
     @EntityAttributePolicy(entityClass = Rule.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
@@ -29,4 +31,8 @@ public interface EvreteAdministratorRole {
     @EntityAttributePolicy(entityClass = RuleSet.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
     @EntityPolicy(entityClass = RuleSet.class, actions = EntityPolicyAction.ALL)
     void ruleSet();
+
+    @EntityAttributePolicy(entityClass = RuleConditionParameter.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
+    @EntityPolicy(entityClass = RuleConditionParameter.class, actions = EntityPolicyAction.ALL)
+    void ruleConditionParameter();
 }
