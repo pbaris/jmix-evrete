@@ -20,11 +20,11 @@
 		<formLayout id="form" dataContainer="ruleDc">
 			<responsiveSteps>
 				<responsiveStep minWidth="0" columns="1"/>
-				<responsiveStep minWidth="40em" columns="2"/>
+				<responsiveStep minWidth="30em" columns="2"/>
 			</responsiveSteps>
-			<textField id="nameField" property="name"/>
-			<textField id="priorityField" property="priority"/>
-			<checkbox id="activeField" property="active"/>
+			<textField id="nameField" property="name" colspan="2"/>
+			<integerField id="priorityField" property="priority" clearButtonVisible="true" step="1" stepButtonsVisible="true"/>
+			<switch id="activeField" property="active"/>
 		</formLayout>
 		<hbox id="detailActions">
 			<button id="saveAndCloseButton" action="saveAction"/>

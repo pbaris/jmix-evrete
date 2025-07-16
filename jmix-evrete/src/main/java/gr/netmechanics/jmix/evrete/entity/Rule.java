@@ -52,6 +52,7 @@ public class Rule implements HasActive {
     @Column(name = "NAME", nullable = false)
     private String name;
 
+    @NotNull
     @NumberFormat(pattern = "0")
     @Column(name = "PRIORITY")
     private Integer priority;
