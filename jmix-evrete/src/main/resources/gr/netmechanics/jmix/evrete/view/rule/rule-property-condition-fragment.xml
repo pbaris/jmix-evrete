@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<fragment xmlns="http://jmix.io/schema/flowui/fragment">
+	<data readOnly="true">
+		<instance id="rulePropertyConditionDc" class="gr.netmechanics.jmix.evrete.entity.RulePropertyCondition"/>
+	</data>
+	<content>
+		<hbox id="root" themeNames="spacing-xs" width="100%" alignItems="BASELINE">
+			<comboBox id="entityMetaClassField" property="entityMetaClass" dataContainer="rulePropertyConditionDc" width="100%" themeNames="small"/>
+			<comboBox id="propertyField" property="property" dataContainer="rulePropertyConditionDc" enabled="false" themeNames="small"/>
+			<comboBox id="operationField" property="operation" dataContainer="rulePropertyConditionDc" enabled="false" themeNames="small"/>
+			<textField id="valueFieldPlaceHolder" width="100%" themeNames="small" enabled="false"/>
+			<button id="resetButton" themeNames="small tertiary" icon="REFRESH" enabled="false"/>
+			<button id="removeButton" themeNames="small tertiary error" icon="TRASH"/>
+		</hbox>
+	</content>
+</fragment>

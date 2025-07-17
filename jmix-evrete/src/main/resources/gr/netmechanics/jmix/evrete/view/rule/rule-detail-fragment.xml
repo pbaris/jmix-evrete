@@ -4,14 +4,34 @@
 		<instance id="ruleDc" class="gr.netmechanics.jmix.evrete.entity.Rule" provided="true"/>
 	</data>
 	<content>
-		<formLayout id="root" dataContainer="ruleDc">
-			<responsiveSteps>
-				<responsiveStep minWidth="0" columns="1"/>
-				<responsiveStep minWidth="40em" columns="3"/>
-			</responsiveSteps>
-			<textField id="nameField" property="name"/>
-			<integerField id="priorityField" property="priority" clearButtonVisible="true" step="1" stepButtonsVisible="true"/>
-			<switch id="activeField" property="active"/>
-		</formLayout>
+		<vbox id="root" padding="false">
+			<formLayout dataContainer="ruleDc">
+				<responsiveSteps>
+					<responsiveStep minWidth="0" columns="1"/>
+					<responsiveStep minWidth="40em" columns="3"/>
+				</responsiveSteps>
+				<textField id="nameField" property="name"/>
+				<integerField id="priorityField" property="priority" clearButtonVisible="true" step="1" stepButtonsVisible="true"/>
+				<switch id="activeField" property="active"/>
+			</formLayout>
+
+			<!-- TODO i18n -->
+			<vbox classNames="border rounded rounded-m">
+				<accordion width="100%">
+					<!-- Property Conditions -->
+					<accordionPanel summaryText="msg://rulePropertyConditions.header" themeNames="reverse filled">
+						<vbox padding="false" spacing="false">
+							<vbox id="propertyConditionsContainer" padding="false" spacing="false"/>
+							<button id="addPropertyConditionButton" text="msg://rulePropertyConditions.add" themeNames="tertiary small" icon="PLUS"/>
+						</vbox>
+					</accordionPanel>
+
+					<!-- Action -->
+					<accordionPanel summaryText="Action" themeNames="reverse filled">
+						<span text="action"/>
+					</accordionPanel>
+				</accordion>
+			</vbox>
+		</vbox>
 	</content>
 </fragment>

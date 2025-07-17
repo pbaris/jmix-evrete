@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Utility class for JSON serialization and deserialization using Jackson.
@@ -50,6 +51,10 @@ public class JsonUtil {
      * @return an Optional containing the deserialized object or empty if deserialization fails
      */
     public static <T> Optional<T> fromJson(final String json, final Class<T> objClass) {
+        if (StringUtils.isBlank(json)) {
+            return Optional.empty();
+        }
+
         try {
             return Optional.ofNullable(MAPPER.readValue(json, objClass));
 
@@ -68,6 +73,10 @@ public class JsonUtil {
      * @return an Optional containing the deserialized object or empty if deserialization fails
      */
     public static <T> Optional<T> fromJson(final String json, final TypeReference<T> typeReference) {
+        if (StringUtils.isBlank(json)) {
+            return Optional.empty();
+        }
+
         try {
             return Optional.ofNullable(MAPPER.readValue(json, typeReference));
 

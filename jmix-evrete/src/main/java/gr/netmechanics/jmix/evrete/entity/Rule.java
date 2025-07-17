@@ -7,6 +7,7 @@ import gr.netmechanics.jmix.evrete.entity.trait.HasActive;
 import io.jmix.core.DeletePolicy;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.entity.annotation.OnDeleteInverse;
+import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import io.jmix.core.metamodel.annotation.NumberFormat;
@@ -33,6 +34,7 @@ import org.springframework.data.annotation.LastModifiedDate;
  */
 @Getter
 @Setter
+@SystemLevel
 @JmixEntity
 @Table(name = "EVRETE_RULE", indexes = {
     @Index(name = "IDX_EVRETE_RULE_RULE_SET", columnList = "RULE_SET_ID")
@@ -64,8 +66,8 @@ public class Rule implements HasActive {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private RuleSet ruleSet;
 
-    @Column(name = "RULE_CONDITION")
-    private RuleCondition ruleCondition;
+    @Column(name = "RULE_METADATA")
+    private RuleMetadata ruleMetadata;
 
     @Version
     @Column(name = "VERSION", nullable = false)

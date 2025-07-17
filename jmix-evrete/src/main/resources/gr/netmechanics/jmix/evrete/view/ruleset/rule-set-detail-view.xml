@@ -50,7 +50,7 @@
 					</hbox>
 					<hr/>
 					<listBox id="rulesListBox" itemsContainer="rulesDc">
-						<fragmentRenderer class="com.company.test_2_6.view.rule.RuleListFragmentRenderer"/>
+						<fragmentRenderer class="gr.netmechanics.jmix.evrete.view.rule.RuleListFragmentRenderer"/>
 					</listBox>
 				</accordionPanel>
 			</accordion>

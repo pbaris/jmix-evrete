@@ -1,9 +1,13 @@
 package gr.netmechanics.jmix.evrete.view.ruleset;
 
+import java.util.Optional;
+
 import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.router.Route;
 import gr.netmechanics.jmix.evrete.entity.Rule;
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
+import gr.netmechanics.jmix.evrete.view.rule.RuleDetailFragment;
 import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.component.listbox.JmixListBox;
 import io.jmix.flowui.component.tabsheet.JmixTabSheet;
@@ -29,6 +33,8 @@ import io.jmix.flowui.view.ViewDescriptor;
 @EditedEntityContainer("ruleSetDc")
 @PrimaryDetailView(RuleSet.class)
 public class RuleSetDetailView extends StandardDetailView<RuleSet> {
+    private static final int RULE_EDITOR_TAB_INDEX = 1;
+
     @ViewComponent private DataGrid<Rule> rulesDataGrid;
     @ViewComponent private JmixTabSheet ruleSetTabSheet;
     @ViewComponent private InstanceContainer<Rule> ruleDc;
@@ -49,8 +55,17 @@ public class RuleSetDetailView extends StandardDetailView<RuleSet> {
             rulesDataGrid.select(rule);
             ruleDc.setItem(rule);
             adjustRuleEditorTab();
-            ruleSetTabSheet.setSelectedIndex(1);
+            ruleSetTabSheet.setSelectedIndex(RULE_EDITOR_TAB_INDEX);
         }
+    }
+
+    @Subscribe
+    public void onValidation(final ValidationEvent event) {
+        ruleSetTabSheet.setSelectedIndex(RULE_EDITOR_TAB_INDEX);
+        Tab ruleEditorTab = ruleSetTabSheet.getTabAt(RULE_EDITOR_TAB_INDEX);
+
+        Optional.ofNullable(ruleSetTabSheet.getContentByTab(ruleEditorTab))
+            .ifPresent(cmp -> ((RuleDetailFragment) cmp).onValidation(event));
     }
 
     @Install(to = "rulesDataGrid.removeAction", subject = "afterActionPerformedHandler")
@@ -62,6 +77,6 @@ public class RuleSetDetailView extends StandardDetailView<RuleSet> {
 
     private void adjustRuleEditorTab() {
         boolean hasSelectedRule = !rulesDataGrid.getSelectedItems().isEmpty();
-        ruleSetTabSheet.getTabAt(1).setEnabled(hasSelectedRule);
+        ruleSetTabSheet.getTabAt(RULE_EDITOR_TAB_INDEX).setEnabled(hasSelectedRule);
     }
 }

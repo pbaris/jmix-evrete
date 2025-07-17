@@ -8,6 +8,7 @@ import gr.netmechanics.jmix.evrete.entity.trait.HasActive;
 import io.jmix.core.DeletePolicy;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.entity.annotation.OnDelete;
+import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
@@ -32,6 +33,7 @@ import org.springframework.data.annotation.LastModifiedDate;
  */
 @Getter
 @Setter
+@SystemLevel
 @JmixEntity
 @Table(name = "EVRETE_RULE_SET")
 @Entity(name = "evrete_RuleSet")

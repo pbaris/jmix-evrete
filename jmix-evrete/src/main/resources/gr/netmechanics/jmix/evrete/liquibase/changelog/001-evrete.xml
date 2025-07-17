@@ -17,7 +17,7 @@
 			<column name="RULE_SET_ID" type="UUID">
 				<constraints nullable="false"/>
 			</column>
-			<column name="RULE_CONDITION" type="CLOB"/>
+			<column name="RULE_METADATA" type="CLOB"/>
 			<column name="VERSION" type="INT">
 				<constraints nullable="false"/>
 			</column>
