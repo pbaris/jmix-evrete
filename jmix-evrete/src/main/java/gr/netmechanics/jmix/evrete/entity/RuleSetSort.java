@@ -8,20 +8,20 @@ import org.springframework.lang.Nullable;
  * @author Panos Bariamis (pbaris)
  */
 @Getter
-public enum RuleSort implements EnumClass<String> {
+public enum RuleSetSort implements EnumClass<String> {
 
     BY_NAME("BY_NAME"),
     BY_NAME_INVERSE("BY_NAME_INVERSE");
 
     private final String id;
 
-    RuleSort(final String id) {
+    RuleSetSort(final String id) {
         this.id = id;
     }
 
     @Nullable
-    public static RuleSort fromId(final String id) {
-        for (RuleSort at : RuleSort.values()) {
+    public static RuleSetSort fromId(final String id) {
+        for (RuleSetSort at : RuleSetSort.values()) {
             if (at.getId().equals(id)) {
                 return at;
             }

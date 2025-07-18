@@ -8,6 +8,7 @@ import io.jmix.eclipselink.EclipselinkConfiguration;
 import io.jmix.flowui.FlowuiConfiguration;
 import io.jmix.flowui.sys.ActionsConfiguration;
 import io.jmix.flowui.sys.ViewControllersConfiguration;
+import org.evrete.KnowledgeService;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,15 @@ import org.springframework.context.annotation.PropertySource;
 @JmixModule(dependsOn = {EclipselinkConfiguration.class, FlowuiConfiguration.class})
 @PropertySource(name = "gr.netmechanics.jmix.evrete", value = "classpath:/gr/netmechanics/jmix/evrete/module.properties")
 public class EvreteConfiguration {
+
+    //TODO add property to filter entities in RulePropertyConditions if user wants it
+    // maybe create an annotation for selection
+
+    @Bean(name = "evrete_KnowledgeService", destroyMethod = "shutdown")
+    public KnowledgeService knowledgeService() {
+        return new KnowledgeService();
+    }
+
 
     @Bean("evrete_EvreteViewControllers")
     public ViewControllersConfiguration screens(final ApplicationContext applicationContext,

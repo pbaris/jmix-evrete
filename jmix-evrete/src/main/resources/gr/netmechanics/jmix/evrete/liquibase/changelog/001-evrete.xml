@@ -40,6 +40,7 @@
 				<constraints nullable="false"/>
 			</column>
 			<column name="ACTIVE" type="BOOLEAN"/>
+			<column name="SYS_TENANT_ID" type="VARCHAR(255)"/>
 			<column name="VERSION" type="INT">
 				<constraints nullable="false"/>
 			</column>
@@ -50,11 +51,46 @@
 		</createTable>
 	</changeSet>
 	<changeSet id="3" author="evrete">
+		<createTable tableName="EVRETE_RULE_SET_EXECUTION_LOG">
+			<column name="ID" type="UUID">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="PK_EVRETE_RULE_SET_EXECUTION_LOG"/>
+			</column>
+			<column name="RULE_SET_ID" type="UUID">
+				<constraints nullable="false"/>
+			</column>
+			<column name="SUCCESS" type="BOOLEAN"/>
+			<column name="ERROR_MESSAGE" type="VARCHAR(2000)"/>
+			<column name="EXECUTION_START_AT" type="DATETIME">
+				<constraints nullable="false"/>
+			</column>
+			<column name="EXECUTION_END_AT" type="DATETIME">
+				<constraints nullable="false"/>
+			</column>
+			<column name="SYS_TENANT_ID" type="VARCHAR(255)"/>
+			<column name="VERSION" type="INT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CREATED_BY" type="VARCHAR(255)"/>
+			<column name="CREATED_DATE" type="DATETIME"/>
+			<column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+			<column name="LAST_MODIFIED_DATE" type="DATETIME"/>
+		</createTable>
+	</changeSet>
+	<changeSet id="4" author="evrete">
 		<createIndex indexName="IDX_EVRETE_RULE_RULE_SET" tableName="EVRETE_RULE">
 			<column name="RULE_SET_ID"/>
 		</createIndex>
 
 		<addForeignKeyConstraint baseColumnNames="RULE_SET_ID" baseTableName="EVRETE_RULE" constraintName="FK_EVRETE_RULE_ON_RULE_SET"
 								 onDelete="CASCADE" referencedColumnNames="ID" referencedTableName="EVRETE_RULE_SET"/>
+	</changeSet>
+	<changeSet id="5" author="evrete">
+		<createIndex indexName="IDX_EVRETE_RULE_SET_EXECUTION_LOG_RULE_SET" tableName="EVRETE_RULE_SET_EXECUTION_LOG">
+			<column name="RULE_SET_ID"/>
+		</createIndex>
+
+		<addForeignKeyConstraint baseColumnNames="RULE_SET_ID" baseTableName="EVRETE_RULE_SET_EXECUTION_LOG"
+								 constraintName="FK_EVRETE_RULE_SET_EXECUTION_LOG_ON_RULE_SET" onDelete="CASCADE" referencedColumnNames="ID"
+								 referencedTableName="EVRETE_RULE_SET"/>
 	</changeSet>
 </databaseChangeLog>
