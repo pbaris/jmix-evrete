@@ -12,7 +12,7 @@ public class ${RULE_SET_CLASS_NAME} {
 	@Rule(value = "${rule.name ?: 'Undefined'}", salience = ${rule.priority ?: 0})
 	${RS_HELPER.writeWhere(rule)}
 	public void rule${index}(${RS_HELPER.writeParameters(rule)}) {
-
+		${RS_HELPER.writeMethodBody(rule)}
 	}
 
 <% } %>
