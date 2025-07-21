@@ -1,6 +1,7 @@
 package gr.netmechanics.jmix.evrete.role;
 
 import gr.netmechanics.jmix.evrete.entity.Rule;
+import gr.netmechanics.jmix.evrete.entity.RuleActionDefinition;
 import gr.netmechanics.jmix.evrete.entity.RulePropertyCondition;
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
 import gr.netmechanics.jmix.evrete.entity.RuleSetExecutionLog;
@@ -40,4 +41,8 @@ public interface EvreteAdministratorRole {
     @EntityAttributePolicy(entityClass = RuleSetExecutionLog.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
     @EntityPolicy(entityClass = RuleSetExecutionLog.class, actions = EntityPolicyAction.ALL)
     void ruleSetExecutionLog();
+
+    @EntityAttributePolicy(entityClass = RuleActionDefinition.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
+    @EntityPolicy(entityClass = RuleActionDefinition.class, actions = EntityPolicyAction.ALL)
+    void ruleActionDefinition();
 }
