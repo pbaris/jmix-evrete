@@ -3,6 +3,7 @@ package gr.netmechanics.jmix.evrete.app;
 import java.time.LocalDateTime;
 
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
+import gr.netmechanics.jmix.evrete.entity.RuleSetExecutionType;
 import lombok.RequiredArgsConstructor;
 import org.evrete.KnowledgeService;
 import org.evrete.api.StatelessSession;
@@ -17,16 +18,18 @@ public class RuleSetExecutionService {
 
     private final KnowledgeService knowledgeService;
     private final RuleSetExecutionLogService executionLogService;
-    private final RuleSetMarshaller ruleSetMarshaller;
+    private final RuleSetGenerator ruleSetGenerator;
 
-    public void execute(final RuleSet ruleSet) {
+    public void execute(final RuleSet ruleSet, final RuleSetExecutionType executionType) {
         var executionLog = executionLogService.create();
         executionLog.setRuleSet(ruleSet);
         executionLog.setExecutionStartAt(LocalDateTime.now());
+        executionLog.setExecutionType(executionType);
+
+        String ruleSetSource = null;
 
         try {
-            String ruleSetSource = ruleSetMarshaller.marshal(ruleSet);
-            System.out.println(ruleSetSource);
+            ruleSetSource = ruleSetGenerator.generate(ruleSet);
 
             var knowledge = knowledgeService.newKnowledge()
                 .importRules("JAVA-SOURCE", ruleSetSource);
@@ -42,6 +45,7 @@ public class RuleSetExecutionService {
             executionLog.setErrorMessage(e.getMessage());
 
         } finally {
+            executionLog.setCode(ruleSetSource);
             executionLog.setExecutionEndAt(LocalDateTime.now());
             executionLogService.save(executionLog);
         }

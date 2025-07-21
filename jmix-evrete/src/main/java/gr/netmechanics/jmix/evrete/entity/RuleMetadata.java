@@ -18,6 +18,8 @@ public class RuleMetadata implements Serializable {
 
     private UUID id;
 
+    private RuleActionDefinition action;
+
     private List<RulePropertyCondition> propertyConditions;
 
     public RuleMetadata() {

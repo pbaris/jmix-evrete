@@ -5,6 +5,7 @@ import java.util.TreeSet;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Panos Bariamis (pbaris)
@@ -26,10 +27,15 @@ public class JavaNamingUtil {
      * - Remove invalid chars
      * - No Java keywords as parts
      */
-    public static String getPackageName(String input) {
-        String cleaned = input.toLowerCase().replaceAll("[^a-z0-9]", "");
-        if (cleaned.isEmpty()) cleaned = "defaultpkg";
-        if (JAVA_KEYWORDS.contains(cleaned)) cleaned = cleaned + "pkg";
+    public static String getPackageName(final String input) {
+        String cleaned = StringUtils.isBlank(input) ? "" : input.toLowerCase().replaceAll("[^a-z0-9]", "");
+        if (cleaned.isEmpty()) {
+            cleaned = "defaultpkg";
+        }
+
+        if (JAVA_KEYWORDS.contains(cleaned)) {
+            cleaned = cleaned + "pkg";
+        }
         return cleaned;
     }
 
@@ -39,9 +45,12 @@ public class JavaNamingUtil {
      * - Remove invalid chars
      * - Prefix if starts with digit or keyword
      */
-    public static String getClassName(String input) {
+    public static String getClassName(final String input) {
         String camel = toCamelCase(input, true);
-        if (camel.isEmpty()) camel = "GeneratedClass";
+        if (camel.isEmpty()) {
+            camel = "GeneratedClass";
+        }
+
         if (Character.isDigit(camel.charAt(0)) || JAVA_KEYWORDS.contains(camel.toLowerCase())) {
             camel = "Generated" + camel;
         }
@@ -54,9 +63,12 @@ public class JavaNamingUtil {
      * - Remove invalid chars
      * - Prefix if starts with digit or keyword
      */
-    public static String getMethodName(String input) {
+    public static String getMethodName(final String input) {
         String camel = toCamelCase(input, false);
-        if (camel.isEmpty()) camel = "generatedMethod";
+        if (camel.isEmpty()) {
+            camel = "generatedMethod";
+        }
+
         if (Character.isDigit(camel.charAt(0)) || JAVA_KEYWORDS.contains(camel.toLowerCase())) {
             camel = "generated" + capitalizeFirstLetter(camel);
         }
@@ -66,11 +78,15 @@ public class JavaNamingUtil {
     /**
      * Same rules as method name for parameters
      */
-    public static String getParameterName(String input) {
+    public static String getParameterName(final String input) {
         return getMethodName(input);
     }
 
-    private static String toCamelCase(String s, boolean startWithUpper) {
+    private static String toCamelCase(final String s, final boolean startWithUpper) {
+        if (StringUtils.isBlank(s)) {
+            return "";
+        }
+
         StringBuilder sb = new StringBuilder();
         boolean capitalizeNext = startWithUpper;
         for (char c : s.toCharArray()) {
@@ -78,9 +94,11 @@ public class JavaNamingUtil {
                 if (capitalizeNext) {
                     sb.append(Character.toUpperCase(c));
                     capitalizeNext = false;
+
                 } else {
                     sb.append(Character.toLowerCase(c));
                 }
+
             } else {
                 capitalizeNext = true;
             }
@@ -88,8 +106,7 @@ public class JavaNamingUtil {
         return sb.toString();
     }
 
-    private static String capitalizeFirstLetter(String s) {
-        if (s == null || s.isEmpty()) return s;
+    private static String capitalizeFirstLetter(final String s) {
         return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 }

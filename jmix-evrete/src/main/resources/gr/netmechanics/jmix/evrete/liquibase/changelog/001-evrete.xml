@@ -66,6 +66,10 @@
 			<column name="EXECUTION_END_AT" type="DATETIME">
 				<constraints nullable="false"/>
 			</column>
+			<column name="CODE" type="CLOB"/>
+			<column name="EXECUTION_TYPE" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
 			<column name="SYS_TENANT_ID" type="VARCHAR(255)"/>
 			<column name="VERSION" type="INT">
 				<constraints nullable="false"/>

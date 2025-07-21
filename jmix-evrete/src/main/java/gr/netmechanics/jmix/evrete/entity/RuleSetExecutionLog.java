@@ -19,6 +19,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -67,12 +68,17 @@ public class RuleSetExecutionLog {
     @NotNull @Column(name = "EXECUTION_END_AT", nullable = false)
     private LocalDateTime executionEndAt;
 
+    @Lob
+    @Column(name = "CODE")
+    private String code;
+
+    @NotNull @Column(name = "EXECUTION_TYPE", nullable = false)
+    private String executionType;
+
     @SystemLevel
     @Column(name = "SYS_TENANT_ID")
     @TenantId
-    protected String sysTenantId;
-
-    //TODO add generated ruleset java source
+    private String sysTenantId;
 
     @Version
     @Column(name = "VERSION", nullable = false)
@@ -98,5 +104,13 @@ public class RuleSetExecutionLog {
     @DependsOnProperties({"ruleSet", "executionStartAt"})
     public String getDisplayName() {
         return "[%s] execution at %s".formatted(ruleSet.getName(), FORMATTER.format(executionStartAt));
+    }
+
+    public RuleSetExecutionType getExecutionType() {
+        return executionType == null ? null : RuleSetExecutionType.fromId(executionType);
+    }
+
+    public void setExecutionType(final RuleSetExecutionType executionType) {
+        this.executionType = executionType == null ? null : executionType.getId();
     }
 }

@@ -24,6 +24,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -88,4 +90,11 @@ public class Rule implements HasActive {
     @LastModifiedDate
     @Column(name = "LAST_MODIFIED_DATE")
     private Date lastModifiedDate;
+
+    public boolean isValidToProcess() {
+        return BooleanUtils.isTrue(active)
+               && ruleMetadata != null
+               && ruleMetadata.getAction() != null
+               && StringUtils.isNotBlank(ruleMetadata.getAction().getBeanClass());
+    }
 }

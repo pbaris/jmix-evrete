@@ -1,7 +1,10 @@
 package gr.netmechanics.jmix.evrete.entity;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import gr.netmechanics.jmix.evrete.entity.trait.HasActive;
@@ -22,6 +25,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -94,5 +100,29 @@ public class RuleSet implements HasActive {
 
     public void setDefaultSort(final RuleSetSort defaultSort) {
         this.defaultSort = defaultSort == null ? null : defaultSort.getId();
+    }
+
+    public Map<String, Object> getProcessData() {
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("name", StringUtils.defaultIfBlank(name, "Undefined"));
+        data.put("defaultSort", defaultSort);
+        data.put("active", BooleanUtils.isTrue(active));
+        if (CollectionUtils.isNotEmpty(rules)) {
+            data.put("rules", rules.stream()
+                .filter(Rule::isValidToProcess)
+                .map(rule -> {
+                    Map<String, Object> ruleMap = new LinkedHashMap<>();
+                    ruleMap.put("name", StringUtils.defaultIfBlank(rule.getName(), "Undefined"));
+                    ruleMap.put("priority", rule.getPriority() == null ? 0 : rule.getPriority());
+                    ruleMap.put("active", BooleanUtils.isTrue(rule.getActive()));
+                    ruleMap.put("metadata", rule.getRuleMetadata());
+                    return ruleMap;
+                })
+                .toList());
+
+        } else {
+            data.put("rules", Collections.emptyList());
+        }
+        return data;
     }
 }

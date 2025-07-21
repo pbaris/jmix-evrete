@@ -6,16 +6,14 @@ import org.evrete.dsl.annotation.RuleSet;
 import org.evrete.dsl.annotation.Where;
 ${RS_HELPER.writeImports(RULE_SET)}
 
-/**
- * @author Panos Bariamis (pbaris)
- */
-@RuleSet(value = "${RULE_SET.name}", defaultSort = RuleSet.Sort.${RULE_SET.defaultSort})
+@RuleSet(value = "${RULE_SET.name ?: 'Undefined'}", defaultSort = RuleSet.Sort.${RULE_SET.defaultSort ?: 'BY_NAME'})
 public class ${RULE_SET_CLASS_NAME} {
 <% RULES.eachWithIndex { rule, index -> %>
-	@Rule(value = "${rule.name}", salience = ${rule.priority})
+	@Rule(value = "${rule.name ?: 'Undefined'}", salience = ${rule.priority ?: 0})
 	${RS_HELPER.writeWhere(rule)}
-	public void rule${index}(final RhsContext ctx) {
+	public void rule${index}(${RS_HELPER.writeParameters(rule)}) {
 
 	}
+
 <% } %>
 }

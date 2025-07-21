@@ -43,6 +43,28 @@ public class JsonUtil {
     }
 
     /**
+     * Serializes an object to JSON string with pretty-print formatting for improved readability.
+     *
+     * @param obj the object to serialize
+     * @param <T> the type of the object
+     * @return an Optional containing the JSON string or empty if serialization fails
+     */
+    public static <T> Optional<String> toJsonPretty(final T obj) {
+        try {
+            String json = MAPPER.writeValueAsString(obj);
+            if (StringUtils.isNotBlank(json)) {
+                json = MAPPER.readTree(json).toPrettyString();
+            }
+
+            return Optional.ofNullable(json);
+
+        } catch (Exception e) {
+            log.warn("Failed to serialize object to JSON: {}", obj, e);
+            return Optional.empty();
+        }
+    }
+
+    /**
      * Deserializes a JSON string to an object of the specified class.
      *
      * @param json     the JSON string to deserialize

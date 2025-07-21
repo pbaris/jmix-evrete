@@ -8,22 +8,19 @@ import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import io.jmix.core.metamodel.annotation.JmixProperty;
-import io.jmix.flowui.component.propertyfilter.PropertyFilter.Operation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @author Panos Bariamis (pbaris)
+ * @author Panos Bariamis
  */
 @Getter
 @Setter
 @SystemLevel
-@JmixEntity(name = "evrete_RulePropertyCondition")
-//TODO create a mechanism that will allow developer through properties toy select
-// which class and properties will be available is selectors through annotations
-public class RulePropertyCondition {
+@JmixEntity(name = "evrete_RuleActionDefinition")
+public class RuleActionDefinition {
     @JmixId
     @JmixGeneratedValue
     private UUID id;
@@ -32,19 +29,7 @@ public class RulePropertyCondition {
     @NotBlank
     @InstanceName
     @JmixProperty(mandatory = true)
-    private String entityMetaClass;
+    private String beanClass;
 
-    @NotNull
-    @NotBlank
-    @JmixProperty(mandatory = true)
-    private String property;
-
-    @NotNull
-    @JmixProperty(mandatory = true)
-    private Operation operation;
-
-    @NotNull
-    @NotBlank
-    @JmixProperty(mandatory = true)
-    private String value;
+    private String code;
 }
