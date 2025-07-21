@@ -15,20 +15,23 @@
 				<switch id="activeField" property="active"/>
 			</formLayout>
 
-			<!-- TODO i18n -->
 			<vbox classNames="border rounded rounded-m">
 				<accordion width="100%">
 					<!-- Property Conditions -->
-					<accordionPanel summaryText="msg://rulePropertyConditions.header" themeNames="reverse filled">
+					<accordionPanel summaryText="msg://rule.propertyConditions.header" themeNames="reverse filled">
 						<vbox padding="false" spacing="false">
 							<vbox id="propertyConditionsContainer" padding="false" spacing="false"/>
-							<button id="addPropertyConditionButton" text="msg://rulePropertyConditions.add" themeNames="tertiary small" icon="PLUS"/>
+							<button id="addPropertyConditionButton" text="msg://rule.propertyConditions.add" themeNames="tertiary small" icon="PLUS"/>
 						</vbox>
 					</accordionPanel>
 
 					<!-- Action -->
-					<accordionPanel summaryText="Action" themeNames="reverse filled">
-						<span text="action"/>
+					<accordionPanel summaryText="msg://rule.action.header" themeNames="reverse filled">
+						<vbox padding="false">
+							<select id="actionSelector" width="100%" classNames="box-border"/>
+							<codeEditor id="actionEditor" width="100%" height="30em" classNames="box-border" helperText="msg://rule.action.helperText"
+										defaultSuggestionsEnabled="true" liveSuggestionsEnabled="true"/>
+						</vbox>
 					</accordionPanel>
 				</accordion>
 			</vbox>

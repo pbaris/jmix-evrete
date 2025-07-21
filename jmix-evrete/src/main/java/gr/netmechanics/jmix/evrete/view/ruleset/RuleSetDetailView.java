@@ -3,14 +3,25 @@ package gr.netmechanics.jmix.evrete.view.ruleset;
 import java.util.Optional;
 
 import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.router.Route;
+import gr.netmechanics.jmix.evrete.app.RuleSetExecutionService;
+import gr.netmechanics.jmix.evrete.app.RuleSetGenerator;
 import gr.netmechanics.jmix.evrete.entity.Rule;
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
+import gr.netmechanics.jmix.evrete.entity.RuleSetSort;
+import gr.netmechanics.jmix.evrete.util.JsonUtil;
 import gr.netmechanics.jmix.evrete.view.rule.RuleDetailFragment;
+import io.jmix.core.DataManager;
+import io.jmix.core.EntityStates;
+import io.jmix.flowui.component.codeeditor.CodeEditor;
 import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.component.listbox.JmixListBox;
+import io.jmix.flowui.component.select.JmixSelect;
 import io.jmix.flowui.component.tabsheet.JmixTabSheet;
+import io.jmix.flowui.kit.component.button.JmixButton;
+import io.jmix.flowui.kit.component.codeeditor.CodeEditorMode;
 import io.jmix.flowui.model.InstanceContainer;
 import io.jmix.flowui.util.RemoveOperation;
 import io.jmix.flowui.view.DefaultMainViewParent;
@@ -22,6 +33,7 @@ import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.ViewComponent;
 import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -38,10 +50,30 @@ public class RuleSetDetailView extends StandardDetailView<RuleSet> {
     @ViewComponent private DataGrid<Rule> rulesDataGrid;
     @ViewComponent private JmixTabSheet ruleSetTabSheet;
     @ViewComponent private InstanceContainer<Rule> ruleDc;
+    @ViewComponent private CodeEditor sourceCodeEditor;
+    @ViewComponent private CodeEditor processDataEditor;
+    @ViewComponent private JmixSelect<RuleSetSort> defaultSortField;
+
+    @Autowired private RuleSetExecutionService executionService;
+    @Autowired private RuleSetGenerator ruleSetGenerator;
+    @Autowired private EntityStates entityStates;
+    @Autowired private DataManager dataManager;
+
+    @Subscribe
+    public void onInit(final InitEvent event) {
+        sourceCodeEditor.setMode(CodeEditorMode.JAVA);
+        sourceCodeEditor.setFontSize("0.8rem");
+        processDataEditor.setMode(CodeEditorMode.JSON);
+        processDataEditor.setFontSize("0.8rem");
+    }
 
     @Subscribe
     public void onBeforeShow(final BeforeShowEvent event) {
         adjustRuleEditorTab();
+
+        if (entityStates.isNew(getEditedEntity())) {
+            defaultSortField.setValue(RuleSetSort.BY_NAME);
+        }
     }
 
     @Subscribe("rulesListBox")
@@ -68,11 +100,32 @@ public class RuleSetDetailView extends StandardDetailView<RuleSet> {
             .ifPresent(cmp -> ((RuleDetailFragment) cmp).onValidation(event));
     }
 
+    // ttfm: ignore inspection
     @Install(to = "rulesDataGrid.removeAction", subject = "afterActionPerformedHandler")
     private void rulesDataGridRemoveActionAfterActionPerformedHandler(final RemoveOperation.AfterActionPerformedEvent<Rule> event) {
         ruleDc.setItem(null);
         ruleSetTabSheet.setSelectedIndex(0);
         adjustRuleEditorTab();
+    }
+
+    @Subscribe(id = "testButton", subject = "clickListener")
+    public void onTestButtonClick(final ClickEvent<JmixButton> event) {
+        executionService.executeTest(getEditedEntity(), null); //TODO remove second parameter
+    }
+
+    @Subscribe("ruleSetTabSheet")
+    public void onRuleSetTabSheetSelectedChange(final JmixTabSheet.SelectedChangeEvent event) {
+        Optional<Tab> selectedTab = Optional.ofNullable(event.getSelectedTab());
+
+        Tab tab;
+        if (selectedTab.isEmpty() || (tab = selectedTab.get()).getId().isEmpty() || !tab.getId().get().equals("previewTab")) {
+            return;
+        }
+
+        sourceCodeEditor.setValue(ruleSetGenerator.generate(getEditedEntity()));
+
+        JsonUtil.toJsonPretty(getEditedEntity().getProcessData())
+            .ifPresentOrElse(metadata -> processDataEditor.setValue(metadata), () -> processDataEditor.clear());
     }
 
     private void adjustRuleEditorTab() {

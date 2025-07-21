@@ -1,6 +1,7 @@
 package gr.netmechanics.jmix.evrete.view.rule;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,7 @@ import io.jmix.core.MetadataTools;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetadataObject;
+import io.jmix.core.metamodel.model.Range;
 import io.jmix.flowui.Dialogs;
 import io.jmix.flowui.action.DialogAction;
 import io.jmix.flowui.component.HasRequired;
@@ -46,7 +48,6 @@ import io.jmix.flowui.kit.component.ComponentUtils;
 import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.ViewComponent;
-import io.jmix.flowui.view.ViewRegistry;
 import lombok.NonNull;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -72,7 +73,6 @@ public class RulePropertyConditionFragment extends FragmentRenderer<HorizontalLa
     @Autowired private Dialogs dialogs;
     @Autowired private SingleFilterSupport singleFilterSupport;
     @Autowired private PropertyFilterSupport propertyFilterSupport;
-    @Autowired private ViewRegistry viewRegistry;
     @Autowired private ObjectToStringConverter objectToStringConverter;
     @Autowired private Copier copier;
 
@@ -177,7 +177,7 @@ public class RulePropertyConditionFragment extends FragmentRenderer<HorizontalLa
         String entityMetaClass = entityMetaClassField.getValue();
 
         if (StringUtils.isBlank(entityMetaClass)) {
-            propertyField.setItems(List.of());
+            propertyField.setItems(Collections.emptyList());
             propertyField.setEnabled(false);
             return;
         }
@@ -196,7 +196,7 @@ public class RulePropertyConditionFragment extends FragmentRenderer<HorizontalLa
         String property = propertyField.getValue();
 
         if (StringUtils.isBlank(entityMetaClass) || StringUtils.isBlank(property)) {
-            operationField.setItems(List.of());
+            operationField.setItems(Collections.emptyList());
             operationField.setEnabled(false);
             return;
         }
@@ -250,21 +250,18 @@ public class RulePropertyConditionFragment extends FragmentRenderer<HorizontalLa
     private Collection<MetaProperty> fetchMetaProperties(final MetaClass metaClass) {
         return propertiesCache.computeIfAbsent(metaClass.getName(), k -> metaClass.getOwnProperties().stream()
             .filter(mp -> {
-                if (metadataTools.isSystemLevel(mp)) {
-                    return false;
-                }
+                return !metadataTools.isSystemLevel(mp) && mp.getRange().getCardinality() == Range.Cardinality.NONE;
 
-                if (mp.getRange().getCardinality().isMany()) {
-                    try {
-                        String viewId = viewRegistry.getAvailableLookupViewId(mp.getRange().asClass());
-                        return viewRegistry.hasView(viewId);
-
-                    } catch (IllegalStateException e) {
-                        return false;
-                    }
-                }
-
-                return true;
+                //TODO do we need to support references to other entities
+//                if (mp.getRange().getCardinality().isMany()) {
+//                    try {
+//                        String viewId = viewRegistry.getAvailableLookupViewId(mp.getRange().asClass());
+//                        return viewRegistry.hasView(viewId);
+//
+//                    } catch (IllegalStateException e) {
+//                        return false;
+//                    }
+//                }
             }).toList());
     }
 

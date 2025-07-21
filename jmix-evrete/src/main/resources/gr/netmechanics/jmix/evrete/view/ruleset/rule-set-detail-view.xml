@@ -25,7 +25,7 @@
 	<layout expand="mainLayout">
 		<div id="mainLayout" width="100%" classNames="evrete-rule-grid grid grid-cols-4 gap-l box-border overflow-auto">
 			<tabSheet id="ruleSetTabSheet" themeNames="small bordered" classNames="col-span-3">
-				<tab id="ruleSetProperties" label="msg://ruleSetDetailView.tab.properties">
+				<tab id="propertiesTab" label="msg://ruleSetDetailView.tab.properties">
 					<formLayout id="form" dataContainer="ruleSetDc">
 						<responsiveSteps>
 							<responsiveStep minWidth="0" columns="1"/>
@@ -37,8 +37,21 @@
 						<textArea id="descriptionField" property="description" colspan="3" height="10em"/>
 					</formLayout>
 				</tab>
-				<tab id="ruleEditor" label="msg://ruleSetDetailView.tab.ruleEditor">
-					<fragment class="com.company.test_2_6.view.rule.RuleDetailFragment"/>
+				<tab id="ruleEditorTab" label="msg://ruleSetDetailView.tab.ruleEditor">
+					<fragment class="gr.netmechanics.jmix.evrete.view.rule.RuleDetailFragment"/>
+				</tab>
+				<tab id="previewTab" label="msg://ruleSetDetailView.tab.preview">
+					<tabSheet id="previewTabSheet" themeNames="no-padding small" classNames="box-border" height="100%">
+						<tab id="sourceCodeTab" label="msg://ruleSetDetailView.tab.sourceCode">
+							<codeEditor id="sourceCodeEditor" readOnly="true" width="100%" height="100%" classNames="box-border"/>
+						</tab>
+						<tab id="processDataTab" label="msg://ruleSetDetailView.tab.processData">
+							<codeEditor id="processDataEditor" readOnly="true" width="100%" height="100%" classNames="box-border"/>
+						</tab>
+						<suffix>
+							<button id="testButton" text="msg://ruleSetDetailView.button.test" themeNames="small" icon="PLAY"/>
+						</suffix>
+					</tabSheet>
 				</tab>
 			</tabSheet>
 
