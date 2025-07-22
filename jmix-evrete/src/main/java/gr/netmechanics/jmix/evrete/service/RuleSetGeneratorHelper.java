@@ -1,4 +1,4 @@
-package gr.netmechanics.jmix.evrete.app;
+package gr.netmechanics.jmix.evrete.service;
 
 import static io.jmix.flowui.component.propertyfilter.PropertyFilter.Operation;
 import static io.jmix.flowui.component.propertyfilter.PropertyFilter.Operation.ENDS_WITH;

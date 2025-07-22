@@ -1,4 +1,4 @@
-package gr.netmechanics.jmix.evrete.app;
+package gr.netmechanics.jmix.evrete.service;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

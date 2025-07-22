@@ -1,4 +1,4 @@
-package gr.netmechanics.jmix.evrete.app;
+package gr.netmechanics.jmix.evrete.service;
 
 import gr.netmechanics.jmix.evrete.entity.RuleSetExecutionLog;
 import io.jmix.core.DataManager;

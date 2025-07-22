@@ -1,4 +1,4 @@
-package gr.netmechanics.jmix.evrete.app;
+package gr.netmechanics.jmix.evrete.service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
