@@ -8,20 +8,20 @@ import org.springframework.lang.Nullable;
  * @author Panos Bariamis (pbaris)
  */
 @Getter
-public enum RuleSetExecutionType implements EnumClass<String> {
+public enum ExecutionType implements EnumClass<String> {
 
     NORMAL("NORMAL"),
     TEST("TEST");
 
     private final String id;
 
-    RuleSetExecutionType(final String id) {
+    ExecutionType(final String id) {
         this.id = id;
     }
 
     @Nullable
-    public static RuleSetExecutionType fromId(final String id) {
-        for (RuleSetExecutionType at : RuleSetExecutionType.values()) {
+    public static ExecutionType fromId(final String id) {
+        for (ExecutionType at : ExecutionType.values()) {
             if (at.getId().equals(id)) {
                 return at;
             }

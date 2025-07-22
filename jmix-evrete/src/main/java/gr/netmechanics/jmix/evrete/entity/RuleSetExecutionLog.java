@@ -106,11 +106,11 @@ public class RuleSetExecutionLog {
         return "[%s] execution at %s".formatted(ruleSet.getName(), FORMATTER.format(executionStartAt));
     }
 
-    public RuleSetExecutionType getExecutionType() {
-        return executionType == null ? null : RuleSetExecutionType.fromId(executionType);
+    public ExecutionType getExecutionType() {
+        return executionType == null ? null : ExecutionType.fromId(executionType);
     }
 
-    public void setExecutionType(final RuleSetExecutionType executionType) {
+    public void setExecutionType(final ExecutionType executionType) {
         this.executionType = executionType == null ? null : executionType.getId();
     }
 }

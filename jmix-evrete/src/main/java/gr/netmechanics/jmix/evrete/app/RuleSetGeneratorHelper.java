@@ -127,8 +127,8 @@ public class RuleSetGeneratorHelper {
 
         getRuleAction(rule.getRuleMetadata()).ifPresent(pair -> {
             RuleActionDefinition actionDefinition = pair.getLeft();
-            if (StringUtils.isBlank(actionDefinition.getCode())) {
-                sb.append(actionDefinition.getCode());
+            if (StringUtils.isNotBlank(actionDefinition.getCode())) {
+                sb.append(actionDefinition.getCode()).append("\n");
             }
 
             RuleAction action = pair.getRight();
@@ -137,7 +137,7 @@ public class RuleSetGeneratorHelper {
             }
         });
 
-        return sb.toString();
+        return sb.isEmpty() ? null : sb.toString();
     }
 
     Optional<Pair<RuleActionDefinition, RuleAction>> getRuleAction(final RuleMetadata metadata) {
@@ -189,7 +189,6 @@ public class RuleSetGeneratorHelper {
             if (operation == null) {
                 return null;
             }
-
 
             MetaProperty metaProperty = getMetaProperty(rpc.getEntityMetaClass(), rpc.getProperty());
 

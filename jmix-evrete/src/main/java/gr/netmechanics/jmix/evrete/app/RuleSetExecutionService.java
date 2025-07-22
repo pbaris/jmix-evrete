@@ -5,10 +5,12 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 
+import gr.netmechanics.jmix.evrete.entity.ExecutionType;
 import gr.netmechanics.jmix.evrete.entity.Rule;
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
-import gr.netmechanics.jmix.evrete.entity.RuleSetExecutionType;
+import gr.netmechanics.jmix.evrete.entity.RuleSetExecutionLog;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.evrete.KnowledgeService;
 import org.evrete.api.StatelessSession;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 /**
  * @author Panos Bariamis (pbaris)
  */
+@Slf4j
 @RequiredArgsConstructor
 @Service("evrete_RuleSetExecutionService")
 public class RuleSetExecutionService {
@@ -26,15 +29,15 @@ public class RuleSetExecutionService {
     private final RuleSetGenerator ruleSetGenerator;
     private final RuleSetGeneratorHelper ruleSetGeneratorHelper;
 
-    public void execute(final RuleSet ruleSet, Iterable<?> data) {
-        execute(ruleSet, RuleSetExecutionType.NORMAL, data);
+    public RuleSetExecutionLog execute(final RuleSet ruleSet) {
+        return execute(ruleSet, ExecutionType.NORMAL);
     }
 
-    public void executeTest(final RuleSet ruleSet, Iterable<?> data) {
-        execute(ruleSet, RuleSetExecutionType.TEST, data);
+    public RuleSetExecutionLog executeTest(final RuleSet ruleSet) {
+        return execute(ruleSet, ExecutionType.TEST);
     }
 
-    private void execute(final RuleSet ruleSet, final RuleSetExecutionType executionType, Iterable<?> data) {
+    private RuleSetExecutionLog execute(final RuleSet ruleSet, final ExecutionType executionType) {
         var executionLog = executionLogService.create();
         executionLog.setRuleSet(ruleSet);
         executionLog.setExecutionStartAt(LocalDateTime.now());
@@ -51,20 +54,22 @@ public class RuleSetExecutionService {
             StatelessSession session = knowledge.newStatelessSession();
             populateSessionContext(ruleSet, session);
 //            session.insert(sessionData); //TODO how/what ?????????
-            session.insert(data);
             session.fire();
 
             executionLog.setSuccess(true);
 
         } catch (Exception e) {
+            log.error("Failed to execute rule set: {}", ruleSet, e);
             executionLog.setSuccess(false);
             executionLog.setErrorMessage(e.getMessage());
 
         } finally {
             executionLog.setCode(ruleSetSource);
             executionLog.setExecutionEndAt(LocalDateTime.now());
-            executionLogService.save(executionLog);
+            executionLog = executionLogService.save(executionLog);
         }
+
+        return executionLog;
     }
 
     private void populateSessionContext(final RuleSet ruleSet, final StatelessSession session) {

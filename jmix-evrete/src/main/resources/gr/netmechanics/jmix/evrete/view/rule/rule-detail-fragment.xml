@@ -27,9 +27,13 @@
 
 					<!-- Action -->
 					<accordionPanel summaryText="msg://rule.action.header" themeNames="reverse filled">
-						<vbox padding="false">
-							<select id="actionSelector" width="100%" classNames="box-border"/>
-							<codeEditor id="actionEditor" width="100%" height="30em" classNames="box-border" helperText="msg://rule.action.helperText"
+						<vbox padding="false" spacing="false">
+							<select id="actionSelector" width="100%" classNames="box-border"
+									label="msg://gr.netmechanics.jmix.evrete.entity/RuleActionDefinition.beanClass"/>
+
+							<codeEditor id="actionEditor" width="100%" height="30em" classNames="box-border"
+										label="msg://gr.netmechanics.jmix.evrete.entity/RuleActionDefinition.code"
+										helperText="msg://rule.action.helperText"
 										defaultSuggestionsEnabled="true" liveSuggestionsEnabled="true"/>
 						</vbox>
 					</accordionPanel>

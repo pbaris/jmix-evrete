@@ -9,6 +9,7 @@ dependencies {
     compileOnly 'io.jmix.security:jmix-security-flowui-starter'
     compileOnly 'io.jmix.flowui:jmix-flowui-data-starter'
     implementation 'org.apache.groovy:groovy-templates'
+    implementation 'com.github.javaparser:javaparser-core:3.27.0'
 
     api 'org.evrete:evrete-core:4.0.3'
     implementation 'org.evrete:evrete-dsl-java-8:4.0.3'

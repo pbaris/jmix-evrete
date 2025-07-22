@@ -1,12 +1,9 @@
 package gr.netmechanics.jmix.evrete.view.rule;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
-import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
@@ -34,7 +31,6 @@ import io.jmix.flowui.view.Supply;
 import io.jmix.flowui.view.Target;
 import io.jmix.flowui.view.ViewComponent;
 import io.jmix.flowui.view.ViewValidation;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +50,7 @@ public class RuleDetailFragment extends Fragment<VerticalLayout> {
     @Autowired private ViewValidation viewValidation;
     @Autowired private ObjectProvider<RuleAction> actionProvider;
 
-    private final Map<UUID, RulePropertyCondition> propertyConditions = new HashMap<>();
-    private RuleActionDefinition actionDefinition;
+    private RuleMetadata ruleMetadataToEdit;
 
     @Subscribe
     public void onReady(final ReadyEvent event) {
@@ -67,14 +62,22 @@ public class RuleDetailFragment extends Fragment<VerticalLayout> {
 
     @Subscribe(id = "ruleDc", target = Target.DATA_CONTAINER)
     public void onRuleDcItemChange(final InstanceContainer.ItemChangeEvent<Rule> event) {
-        Rule rule = event.getItem();
-        if (rule == null) {
+        if (event.getItem() == null) {
             return;
         }
 
-        actionDefinition = dataManager.create(RuleActionDefinition.class);
-        initRulePropertyConditions();
-        initRuleAction();
+        ruleMetadataToEdit = Optional.ofNullable(ruleDc.getItem().getRuleMetadata()).orElseGet(RuleMetadata::new);
+
+        if (ruleMetadataToEdit.getAction() == null) {
+            ruleMetadataToEdit.setAction(dataManager.create(RuleActionDefinition.class));
+        }
+
+        if (ruleMetadataToEdit.getPropertyConditions() == null) {
+            ruleMetadataToEdit.setPropertyConditions(new ArrayList<>());
+        }
+
+        bindRulePropertyConditions();
+        bindRuleAction();
     }
 
     @Supply(to = "actionSelector", subject = "renderer")
@@ -100,18 +103,26 @@ public class RuleDetailFragment extends Fragment<VerticalLayout> {
     }
 
     @Subscribe("actionSelector")
-    public void onActionSelectorComponentValueChange(final AbstractField.ComponentValueChangeEvent<JmixSelect<RuleAction>, RuleAction> event) {
+    public void onActionSelectorComponentValueChange(final ComponentValueChangeEvent<JmixSelect<RuleAction>, RuleAction> event) {
+        if (!event.isFromClient()) {
+            return;
+        }
+
         String beanClass = Optional.ofNullable(event.getValue())
             .map(bc -> bc.getClass().getCanonicalName()).orElse(null);
-        actionDefinition.setBeanClass(beanClass);
 
-        adjustRuleMetadata();
+        ruleMetadataToEdit.getAction().setBeanClass(beanClass);
+        notifyRuleMetadataChanged();
     }
 
     @Subscribe("actionEditor")
-    public void onActionEditorComponentValueChange(final AbstractField.ComponentValueChangeEvent<CodeEditor, String> event) {
-        actionDefinition.setCode(event.getValue());
-        adjustRuleMetadata();
+    public void onActionEditorComponentValueChange(final ComponentValueChangeEvent<CodeEditor, String> event) {
+        if (!event.isFromClient()) {
+            return;
+        }
+
+        ruleMetadataToEdit.getAction().setCode(event.getValue());
+        notifyRuleMetadataChanged();
     }
 
     public void onValidation(final ValidationEvent event) {
@@ -124,32 +135,24 @@ public class RuleDetailFragment extends Fragment<VerticalLayout> {
         });
     }
 
-    private void adjustRuleMetadata() {
-        RuleActionDefinition ruleAD;
-        if (ruleDc.getItem().getRuleMetadata() != null && (ruleAD = ruleDc.getItem().getRuleMetadata().getAction()) != null) {
-            actionDefinition.setId(ruleAD.getId());
-        }
-
-        var ruleMetadata = new RuleMetadata();
-        ruleMetadata.setAction(actionDefinition);
-        ruleMetadata.setPropertyConditions(new ArrayList<>(propertyConditions.values()));
-        ruleDc.getItem().setRuleMetadata(ruleMetadata);
+    private void notifyRuleMetadataChanged() {
+        RuleMetadata newMetadata = new RuleMetadata();
+        newMetadata.setAction(ruleMetadataToEdit.getAction());
+        newMetadata.setPropertyConditions(new ArrayList<>(ruleMetadataToEdit.getPropertyConditions()));
+        ruleDc.getItem().setRuleMetadata(newMetadata);
+        ruleMetadataToEdit = newMetadata;
     }
 
-    private void initRulePropertyConditions() {
-        propertyConditions.clear();
+    private void bindRulePropertyConditions() {
         propertyConditionsContainer.removeAll();
-
-        RuleMetadata ruleMetadata = ruleDc.getItem().getRuleMetadata();
-        if (ruleMetadata != null && CollectionUtils.isNotEmpty(ruleMetadata.getPropertyConditions())) {
-            ruleMetadata.getPropertyConditions().forEach(this::buildRulePropertyConditionRow);
-        }
+        ruleMetadataToEdit.getPropertyConditions().forEach(this::buildRulePropertyConditionRow);
         displayRulePropertyConditionFragmentLabels();
     }
 
     private void buildRulePropertyConditionRow(final RulePropertyCondition rpc) {
-        propertyConditions.put(rpc.getId(), rpc);
-        adjustRuleMetadata();
+        if (!ruleMetadataToEdit.getPropertyConditions().contains(rpc)) {
+            ruleMetadataToEdit.getPropertyConditions().add(rpc);
+        }
 
         RulePropertyConditionFragment fragment = fragments.create(this, RulePropertyConditionFragment.class);
         fragment.setItem(rpc);
@@ -160,14 +163,13 @@ public class RuleDetailFragment extends Fragment<VerticalLayout> {
 
     private void rulePropertyConditionRemoveDelegate(final RulePropertyConditionFragment fragment, final RulePropertyCondition rpc) {
         propertyConditionsContainer.remove(fragment);
-        propertyConditions.remove(rpc.getId());
-        adjustRuleMetadata();
+        ruleMetadataToEdit.getPropertyConditions().remove(rpc);
         displayRulePropertyConditionFragmentLabels();
+        notifyRuleMetadataChanged();
     }
 
     private void rulePropertyConditionItemChangeDelegate(final RulePropertyCondition rpc) {
-        propertyConditions.put(rpc.getId(), rpc);
-        adjustRuleMetadata();
+        notifyRuleMetadataChanged();
     }
 
     private void displayRulePropertyConditionFragmentLabels() {
@@ -176,25 +178,14 @@ public class RuleDetailFragment extends Fragment<VerticalLayout> {
         }
     }
 
-    private void initRuleAction() {
-        var ruleAD = Optional.ofNullable(ruleDc.getItem().getRuleMetadata())
-            .map(RuleMetadata::getAction)
-            .orElse(null);
-
-        if (ruleAD == null) {
-            actionSelector.clear();
-            actionEditor.clear();
-            return;
-        }
-
-        actionDefinition.setBeanClass(ruleAD.getBeanClass());
-        actionDefinition.setCode(ruleAD.getCode());
+    private void bindRuleAction() {
+        RuleActionDefinition actionDefinition = ruleMetadataToEdit.getAction();
 
         actionProvider.stream()
-            .filter(action -> action.getClass().getCanonicalName().equals(ruleAD.getBeanClass()))
+            .filter(action -> action.getClass().getCanonicalName().equals(actionDefinition.getBeanClass()))
             .findAny()
             .ifPresent(action -> actionSelector.setValue(action));
 
-        actionEditor.setValue(ruleAD.getCode());
+        actionEditor.setValue(actionDefinition.getCode());
     }
 }

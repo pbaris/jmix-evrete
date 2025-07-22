@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+	  title="msg://ruleSetExecutionLogListView.title"
+	  focusComponent="ruleSetExecutionLogsDataGrid">
+	<data>
+		<collection id="ruleSetExecutionLogsDc"
+					class="gr.netmechanics.jmix.evrete.entity.RuleSetExecutionLog">
+			<fetchPlan extends="_base"/>
+			<loader id="ruleSetExecutionLogsDl" readOnly="true">
+				<query>
+					<![CDATA[select e from evrete_RuleSetExecutionLog e order by e.executionStartAt desc]]>
+				</query>
+			</loader>
+		</collection>
+	</data>
+	<facets>
+		<dataLoadCoordinator auto="true"/>
+		<urlQueryParameters>
+			<pagination component="pagination"/>
+		</urlQueryParameters>
+	</facets>
+	<actions>
+		<action id="selectAction" type="lookup_select"/>
+		<action id="discardAction" type="lookup_discard"/>
+	</actions>
+	<layout>
+		<hbox id="buttonsPanel" classNames="buttons-panel">
+			<button id="readButton" action="ruleSetExecutionLogsDataGrid.readAction"/>
+			<button id="refreshButton" action="ruleSetExecutionLogsDataGrid.refreshAction"/>
+			<button id="removeButton" action="ruleSetExecutionLogsDataGrid.removeAction"/>
+			<simplePagination id="pagination" dataLoader="ruleSetExecutionLogsDl"/>
+		</hbox>
+		<dataGrid id="ruleSetExecutionLogsDataGrid"
+				  width="100%"
+				  minHeight="20em"
+				  dataContainer="ruleSetExecutionLogsDc"
+				  columnReorderingAllowed="true">
+			<actions>
+				<action id="readAction" type="list_read">
+					<properties>
+						<property name="openMode" value="DIALOG"/>
+					</properties>
+				</action>
+				<action id="refreshAction" type="list_refresh"/>
+				<action id="removeAction" type="list_remove"/>
+			</actions>
+			<columns resizable="true">
+				<column property="ruleSet"/>
+				<column property="executionType"/>
+				<column property="success"/>
+				<column property="executionStartAt"/>
+				<column property="executionEndAt"/>
+			</columns>
+		</dataGrid>
+		<hbox id="lookupActions" visible="false">
+			<button id="selectButton" action="selectAction"/>
+			<button id="discardButton" action="discardAction"/>
+		</hbox>
+	</layout>
+</view>

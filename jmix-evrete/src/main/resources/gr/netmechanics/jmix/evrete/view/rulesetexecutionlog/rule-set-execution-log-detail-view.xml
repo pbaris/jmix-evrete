@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+	  title="msg://ruleSetExecutionLogDetailView.title"
+	  focusComponent="form">
+	<data>
+		<instance id="ruleSetExecutionLogDc"
+				  class="gr.netmechanics.jmix.evrete.entity.RuleSetExecutionLog">
+			<fetchPlan extends="_base"/>
+			<loader id="ruleSetExecutionLogDl"/>
+		</instance>
+	</data>
+	<facets>
+		<dataLoadCoordinator auto="true"/>
+	</facets>
+	<actions>
+		<action id="saveAction" type="detail_saveClose"/>
+		<action id="closeAction" type="detail_close"/>
+	</actions>
+	<layout>
+		<formLayout id="form" dataContainer="ruleSetExecutionLogDc">
+			<responsiveSteps>
+				<responsiveStep minWidth="0" columns="1"/>
+				<responsiveStep minWidth="30em" columns="2"/>
+			</responsiveSteps>
+			<entityPicker id="ruleSetField" property="ruleSet" colspan="2">
+				<actions>
+					<action id="entityClearAction" type="entity_clear"/>
+				</actions>
+			</entityPicker>
+
+			<select id="executionTypeField" property="executionType"/>
+			<checkbox id="successField" property="success"/>
+
+			<dateTimePicker id="executionStartAtField" property="executionStartAt"/>
+			<dateTimePicker id="executionEndAtField" property="executionEndAt"/>
+
+			<textArea id="errorMessageField" property="errorMessage" colspan="2" height="15em"/>
+			<textArea id="codeField" property="code" colspan="2" height="15em" />
+		</formLayout>
+		<hbox id="detailActions">
+			<button id="saveAndCloseButton" action="saveAction"/>
+			<button id="closeButton" action="closeAction"/>
+		</hbox>
+	</layout>
+</view>

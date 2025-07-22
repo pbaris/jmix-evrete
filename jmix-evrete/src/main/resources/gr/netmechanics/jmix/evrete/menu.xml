@@ -3,6 +3,8 @@
 
     <menu id="evrete" title="msg://gr.netmechanics.jmix.evrete/menu.addon">
 		<item view="evrete_RuleSet.list" title="msg://gr.netmechanics.jmix.evrete.view.ruleset/ruleSetListView.title"/>
+		<item view="evrete_RuleSetExecutionLog.list"
+			  title="msg://gr.netmechanics.jmix.evrete.view.rulesetexecutionlog/ruleSetExecutionLogListView.title"/>
 	</menu>
 
 </menu-config>
