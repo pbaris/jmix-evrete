@@ -1,27 +1,27 @@
 package gr.netmechanics.jmix.evrete.action;
 
-import io.jmix.flowui.Notifications;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.evrete.api.RhsContext;
+import org.evrete.api.RuntimeRule;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Panos Bariamis (pbaris)
  */
+@Slf4j
 @RequiredArgsConstructor
-@Component("evrete_NotificationRuleAction")
-public class NotificationRuleAction extends RuleAction {
-
-    private final Notifications notifications;
+@Component("evrete_LoggerRuleAction")
+public class LoggerRuleAction extends RuleAction {
 
     @Override
     public void execute(final RhsContext ctx) {
-        notifications.create("test rule action")
-            .show();
+        RuntimeRule rule = ctx.getRule();
+        log.info("Rule [{}] executed", rule.getName());
     }
 
     @Override
     public String getHelpText() {
-        return "Notifies the user about the execution of the rule.";
+        return "Logs rule execution details using the logger";
     }
 }

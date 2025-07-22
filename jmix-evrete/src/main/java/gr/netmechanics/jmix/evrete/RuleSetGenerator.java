@@ -1,4 +1,4 @@
-package gr.netmechanics.jmix.evrete.service;
+package gr.netmechanics.jmix.evrete;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -67,7 +67,7 @@ public class RuleSetGenerator {
         model.put("RULES", Optional.ofNullable(ruleSet.getRules())
             .orElse(Collections.emptyList())
             .stream()
-            .filter(Rule::isValidToProcess)
+            .filter(Rule::isApplicable)
             .sorted(Comparator.comparingInt(Rule::getPriority))
             .toList());
         return model;

@@ -91,7 +91,7 @@ public class Rule implements HasActive {
     @Column(name = "LAST_MODIFIED_DATE")
     private Date lastModifiedDate;
 
-    public boolean isValidToProcess() {
+    public boolean isApplicable() {
         return BooleanUtils.isTrue(active)
                && ruleMetadata != null
                && ruleMetadata.getAction() != null

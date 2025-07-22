@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class JavaFormatter {
     private static final PrinterConfiguration PRINTER_CONFIGURATION = new DefaultPrinterConfiguration();
 
-    public static String format(String sourceCode) {
+    public static String format(final String sourceCode) {
         return StaticJavaParser.parse(sourceCode).toString(PRINTER_CONFIGURATION);
     }
 }

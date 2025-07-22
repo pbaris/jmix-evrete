@@ -109,7 +109,7 @@ public class RuleSet implements HasActive {
         data.put("active", BooleanUtils.isTrue(active));
         if (CollectionUtils.isNotEmpty(rules)) {
             data.put("rules", rules.stream()
-                .filter(Rule::isValidToProcess)
+                .filter(Rule::isApplicable)
                 .map(rule -> {
                     Map<String, Object> ruleMap = new LinkedHashMap<>();
                     ruleMap.put("name", StringUtils.defaultIfBlank(rule.getName(), "Undefined"));

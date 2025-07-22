@@ -1,4 +1,4 @@
-package gr.netmechanics.jmix.evrete.service;
+package gr.netmechanics.jmix.evrete;
 
 import gr.netmechanics.jmix.evrete.entity.RuleSetExecutionLog;
 import io.jmix.core.DataManager;
@@ -18,7 +18,7 @@ public class RuleSetExecutionLogService {
         return dataManager.create(RuleSetExecutionLog.class);
     }
 
-    public RuleSetExecutionLog save(RuleSetExecutionLog log) {
+    public RuleSetExecutionLog save(final RuleSetExecutionLog log) {
         return dataManager.save(log);
     }
 }

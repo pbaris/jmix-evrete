@@ -31,7 +31,6 @@ public class EvreteConfiguration {
         return new KnowledgeService();
     }
 
-
     @Bean("evrete_EvreteViewControllers")
     public ViewControllersConfiguration screens(final ApplicationContext applicationContext,
                                                 final AnnotationScanMetadataReaderFactory metadataReaderFactory) {

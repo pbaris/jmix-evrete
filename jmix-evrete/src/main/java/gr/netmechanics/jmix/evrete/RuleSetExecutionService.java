@@ -1,10 +1,11 @@
-package gr.netmechanics.jmix.evrete.service;
+package gr.netmechanics.jmix.evrete;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 
+import gr.netmechanics.jmix.evrete.data.RuleSetDataProvider;
 import gr.netmechanics.jmix.evrete.entity.ExecutionType;
 import gr.netmechanics.jmix.evrete.entity.Rule;
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.evrete.KnowledgeService;
 import org.evrete.api.StatelessSession;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,13 +30,14 @@ public class RuleSetExecutionService {
     private final RuleSetExecutionLogService executionLogService;
     private final RuleSetGenerator ruleSetGenerator;
     private final RuleSetGeneratorHelper ruleSetGeneratorHelper;
-
-    public RuleSetExecutionLog execute(final RuleSet ruleSet) {
-        return execute(ruleSet, ExecutionType.NORMAL);
-    }
+    private final ObjectProvider<RuleSetDataProvider> dataProviders;
 
     public RuleSetExecutionLog executeTest(final RuleSet ruleSet) {
         return execute(ruleSet, ExecutionType.TEST);
+    }
+
+    public RuleSetExecutionLog execute(final RuleSet ruleSet) {
+        return execute(ruleSet, ExecutionType.NORMAL);
     }
 
     private RuleSetExecutionLog execute(final RuleSet ruleSet, final ExecutionType executionType) {
@@ -52,8 +55,12 @@ public class RuleSetExecutionService {
                 .importRules("JAVA-SOURCE", ruleSetSource);
 
             StatelessSession session = knowledge.newStatelessSession();
-            populateSessionContext(ruleSet, session);
-//            session.insert(sessionData); //TODO how/what ?????????
+            populateRuleActionData(ruleSet, session);
+
+            dataProviders.orderedStream()
+                .filter(dp -> dp.isApplicable(ruleSet, session))
+                .forEach(dataProviders -> session.insert(dataProviders.getData(ruleSet, session)));
+
             session.fire();
 
             executionLog.setSuccess(true);
@@ -72,15 +79,15 @@ public class RuleSetExecutionService {
         return executionLog;
     }
 
-    private void populateSessionContext(final RuleSet ruleSet, final StatelessSession session) {
+    private void populateRuleActionData(final RuleSet ruleSet, final StatelessSession session) {
         Optional.ofNullable(ruleSet.getRules())
             .orElse(Collections.emptyList())
             .stream()
-            .filter(Rule::isValidToProcess)
+            .filter(Rule::isApplicable)
             .map(r -> ruleSetGeneratorHelper.getRuleAction(r.getRuleMetadata())
                 .map(Pair::getRight).orElse(null))
             .filter(Objects::nonNull)
             .distinct()
-            .forEach(action -> session.insert(ruleSetGeneratorHelper.getRuleActionParameterName(action), action));
+            .forEach(session::insert);
     }
 }
