@@ -61,7 +61,7 @@ public class RuleSetDetailView extends StandardDetailView<RuleSet> {
     @ViewComponent private JmixTabSheet ruleSetTabSheet;
     @ViewComponent private InstanceContainer<Rule> ruleDc;
     @ViewComponent private CodeEditor sourceCodeEditor;
-    @ViewComponent private CodeEditor processDataEditor;
+    @ViewComponent private CodeEditor executionDataEditor;
     @ViewComponent private JmixSelect<RuleSetSort> defaultSortField;
     @ViewComponent private JmixListBox<Rule> rulesListBox;
     @ViewComponent private MessageBundle messageBundle;
@@ -76,8 +76,8 @@ public class RuleSetDetailView extends StandardDetailView<RuleSet> {
     public void onInit(final InitEvent event) {
         sourceCodeEditor.setMode(CodeEditorMode.JAVA);
         sourceCodeEditor.setFontSize("0.8rem");
-        processDataEditor.setMode(CodeEditorMode.JSON);
-        processDataEditor.setFontSize("0.8rem");
+        executionDataEditor.setMode(CodeEditorMode.JSON);
+        executionDataEditor.setFontSize("0.8rem");
     }
 
     @Subscribe
@@ -144,8 +144,8 @@ public class RuleSetDetailView extends StandardDetailView<RuleSet> {
 
         if (tabId.equals("previewTab")) {
             sourceCodeEditor.setValue(ruleSetGenerator.generate(getEditedEntity()));
-            JsonUtil.toJsonPretty(getEditedEntity().getProcessData())
-                .ifPresentOrElse(metadata -> processDataEditor.setValue(metadata), () -> processDataEditor.clear());
+            JsonUtil.toJsonPretty(getEditedEntity().getExecutionData())
+                .ifPresentOrElse(metadata -> executionDataEditor.setValue(metadata), () -> executionDataEditor.clear());
         }
     }
 

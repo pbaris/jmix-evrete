@@ -102,7 +102,7 @@ public class RuleSet implements HasActive {
         this.defaultSort = defaultSort == null ? null : defaultSort.getId();
     }
 
-    public Map<String, Object> getProcessData() {
+    public Map<String, Object> getExecutionData() {
         Map<String, Object> data = new LinkedHashMap<>();
         data.put("name", StringUtils.defaultIfBlank(name, "Undefined"));
         data.put("defaultSort", defaultSort);
