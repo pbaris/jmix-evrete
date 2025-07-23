@@ -48,6 +48,7 @@ public class RuleSetGeneratorHelper {
                 // Property Conditions
                 if (CollectionUtils.isNotEmpty(ruleMetadata.getPropertyConditions())) {
                     ruleMetadata.getPropertyConditions().stream()
+                        .filter(RulePropertyCondition::isApplicable)
                         .map(rpc -> metadata.getClass(rpc.getEntityMetaClass()).getJavaClass().getCanonicalName())
                         .collect(Collectors.toCollection(() -> imports));
                 }
@@ -86,11 +87,12 @@ public class RuleSetGeneratorHelper {
         var transformer = new RulePropertyConditionToWhereClause(metadata);
 
         var conditions = propertyConditions.stream()
+            .filter(RulePropertyCondition::isApplicable)
             .map(transformer::transform)
             .filter(Objects::nonNull)
             .collect(Collectors.toSet());
 
-        return "@Where(value = {\"%s\"})".formatted(String.join("\", \"", conditions));
+        return conditions.isEmpty() ? "" : "@Where(value = {\"%s\"})".formatted(String.join("\", \"", conditions));
     }
 
     @SuppressWarnings("unused")
@@ -103,6 +105,7 @@ public class RuleSetGeneratorHelper {
         if (!CollectionUtils.isEmpty(propertyConditions)) {
             var transformer = new RulePropertyConditionToParameter(metadata);
             propertyConditions.stream()
+                .filter(RulePropertyCondition::isApplicable)
                 .map(transformer::transform)
                 .distinct()
                 .collect(Collectors.toCollection(() -> parameters));

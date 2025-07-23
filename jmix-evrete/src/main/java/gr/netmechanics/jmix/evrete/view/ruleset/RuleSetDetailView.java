@@ -3,18 +3,18 @@ package gr.netmechanics.jmix.evrete.view.ruleset;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.router.Route;
 import gr.netmechanics.jmix.evrete.RuleSetExecutionService;
+import gr.netmechanics.jmix.evrete.RuleSetGenerator;
 import gr.netmechanics.jmix.evrete.entity.Rule;
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
 import gr.netmechanics.jmix.evrete.entity.RuleSetExecutionLog;
 import gr.netmechanics.jmix.evrete.entity.RuleSetSort;
 import gr.netmechanics.jmix.evrete.util.JsonUtil;
-import gr.netmechanics.jmix.evrete.util.RuleSetGenerator;
 import gr.netmechanics.jmix.evrete.view.rule.RuleDetailFragment;
 import io.jmix.core.EntityStates;
 import io.jmix.flowui.Dialogs;
@@ -90,10 +90,11 @@ public class RuleSetDetailView extends StandardDetailView<RuleSet> {
     }
 
     @Subscribe("rulesListBox")
-    public void onRulesListBoxComponentValueChange(final AbstractField.ComponentValueChangeEvent<JmixListBox<Rule>, Rule> event) {
+    public void onRulesListBoxComponentValueChange(final ComponentValueChangeEvent<JmixListBox<Rule>, Rule> event) {
         Rule rule = event.getValue();
         if (rule == null) {
             rulesDataGrid.deselectAll();
+            ruleDc.setItem(null);
             adjustRuleEditorTab();
 
         } else {
@@ -106,8 +107,10 @@ public class RuleSetDetailView extends StandardDetailView<RuleSet> {
 
     @Subscribe
     public void onValidation(final ValidationEvent event) {
-        ruleSetTabSheet.setSelectedIndex(RULE_EDITOR_TAB_INDEX);
         Tab ruleEditorTab = ruleSetTabSheet.getTabAt(RULE_EDITOR_TAB_INDEX);
+        ruleEditorTab.setEnabled(true);
+
+        ruleSetTabSheet.setSelectedIndex(RULE_EDITOR_TAB_INDEX);
 
         Optional.ofNullable(ruleSetTabSheet.getContentByTab(ruleEditorTab))
             .ifPresent(cmp -> ((RuleDetailFragment) cmp).onValidation(event));

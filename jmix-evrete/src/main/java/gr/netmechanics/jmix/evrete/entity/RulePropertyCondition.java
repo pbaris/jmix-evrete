@@ -2,6 +2,7 @@ package gr.netmechanics.jmix.evrete.entity;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.entity.annotation.JmixId;
 import io.jmix.core.entity.annotation.SystemLevel;
@@ -13,6 +14,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Panos Bariamis (pbaris)
@@ -45,4 +47,12 @@ public class RulePropertyCondition {
     @NotBlank
     @JmixProperty(mandatory = true)
     private String value;
+
+    @JsonIgnore
+    public boolean isApplicable() {
+        return StringUtils.isNotBlank(entityMetaClass)
+               && StringUtils.isNotBlank(property)
+               && operation != null
+               && StringUtils.isNotBlank(value);
+    }
 }

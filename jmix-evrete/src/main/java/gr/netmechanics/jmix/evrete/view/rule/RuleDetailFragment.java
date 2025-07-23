@@ -2,6 +2,7 @@ package gr.netmechanics.jmix.evrete.view.rule;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.ClickEvent;
@@ -44,6 +45,7 @@ public class RuleDetailFragment extends Fragment<VerticalLayout> {
     @ViewComponent private VerticalLayout propertyConditionsContainer;
     @ViewComponent private CodeEditor actionEditor;
     @ViewComponent private JmixSelect<RuleAction> actionSelector;
+    @ViewComponent private VerticalLayout actionContainer;
 
     @Autowired private Fragments fragments;
     @Autowired private DataManager dataManager;
@@ -63,6 +65,13 @@ public class RuleDetailFragment extends Fragment<VerticalLayout> {
     @Subscribe(id = "ruleDc", target = Target.DATA_CONTAINER)
     public void onRuleDcItemChange(final InstanceContainer.ItemChangeEvent<Rule> event) {
         if (event.getItem() == null) {
+            if (event.getPrevItem() != null) {
+                notifyRuleMetadataChanged(event.getPrevItem());
+            }
+            ruleMetadataToEdit = null;
+            propertyConditionsContainer.removeAll();
+            actionSelector.clear();
+            actionEditor.clear();
             return;
         }
 
@@ -112,7 +121,7 @@ public class RuleDetailFragment extends Fragment<VerticalLayout> {
             .map(bc -> bc.getClass().getCanonicalName()).orElse(null);
 
         ruleMetadataToEdit.getAction().setBeanClass(beanClass);
-        notifyRuleMetadataChanged();
+        notifyRuleMetadataChanged(ruleDc.getItem());
     }
 
     @Subscribe("actionEditor")
@@ -122,9 +131,10 @@ public class RuleDetailFragment extends Fragment<VerticalLayout> {
         }
 
         ruleMetadataToEdit.getAction().setCode(event.getValue());
-        notifyRuleMetadataChanged();
+        notifyRuleMetadataChanged(ruleDc.getItem());
     }
 
+    //TODO do we need it? should/can action be required
     public void onValidation(final ValidationEvent event) {
         UiComponentUtils.getOwnComponents(propertyConditionsContainer).forEach(cmp -> {
             RulePropertyConditionFragment fragment = (RulePropertyConditionFragment) cmp;
@@ -133,14 +143,22 @@ public class RuleDetailFragment extends Fragment<VerticalLayout> {
                 event.addErrors(validationErrors);
             }
         });
+
+        if (ruleMetadataToEdit != null) {
+            ValidationErrors validationErrors = viewValidation.validateUiComponents(actionContainer);
+            if (!validationErrors.isEmpty()) {
+                event.addErrors(validationErrors);
+            }
+        }
     }
 
-    private void notifyRuleMetadataChanged() {
+    private void notifyRuleMetadataChanged(final Rule item) {
         RuleMetadata newMetadata = new RuleMetadata();
         newMetadata.setAction(ruleMetadataToEdit.getAction());
-        newMetadata.setPropertyConditions(new ArrayList<>(ruleMetadataToEdit.getPropertyConditions()));
-        ruleDc.getItem().setRuleMetadata(newMetadata);
-        ruleMetadataToEdit = newMetadata;
+        newMetadata.setPropertyConditions(ruleMetadataToEdit.getPropertyConditions().stream()
+            .filter(RulePropertyCondition::isApplicable)
+            .collect(Collectors.toList()));
+        item.setRuleMetadata(newMetadata);
     }
 
     private void bindRulePropertyConditions() {
@@ -165,11 +183,11 @@ public class RuleDetailFragment extends Fragment<VerticalLayout> {
         propertyConditionsContainer.remove(fragment);
         ruleMetadataToEdit.getPropertyConditions().remove(rpc);
         displayRulePropertyConditionFragmentLabels();
-        notifyRuleMetadataChanged();
+        notifyRuleMetadataChanged(ruleDc.getItem());
     }
 
     private void rulePropertyConditionItemChangeDelegate(final RulePropertyCondition rpc) {
-        notifyRuleMetadataChanged();
+        notifyRuleMetadataChanged(ruleDc.getItem());
     }
 
     private void displayRulePropertyConditionFragmentLabels() {
