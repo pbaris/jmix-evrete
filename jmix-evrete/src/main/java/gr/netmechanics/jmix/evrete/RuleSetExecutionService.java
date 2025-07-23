@@ -6,6 +6,8 @@ import gr.netmechanics.jmix.evrete.data.RuleSetFactsProvider;
 import gr.netmechanics.jmix.evrete.entity.ExecutionType;
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
 import gr.netmechanics.jmix.evrete.entity.RuleSetExecutionLog;
+import gr.netmechanics.jmix.evrete.util.RuleSetGenerator;
+import gr.netmechanics.jmix.evrete.util.RuleSetGeneratorHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.evrete.KnowledgeService;

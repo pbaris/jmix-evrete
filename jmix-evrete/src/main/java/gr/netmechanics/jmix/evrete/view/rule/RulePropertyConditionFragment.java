@@ -1,13 +1,9 @@
 package gr.netmechanics.jmix.evrete.view.rule;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -23,15 +19,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import gr.netmechanics.jmix.evrete.entity.RulePropertyCondition;
 import gr.netmechanics.jmix.evrete.util.JsonUtil;
 import gr.netmechanics.jmix.evrete.util.ObjectToStringConverter;
+import gr.netmechanics.jmix.evrete.util.RulePropertyConditionsHelper;
 import io.jmix.core.Copier;
-import io.jmix.core.MessageTools;
 import io.jmix.core.Messages;
 import io.jmix.core.Metadata;
-import io.jmix.core.MetadataTools;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetadataObject;
-import io.jmix.core.metamodel.model.Range;
 import io.jmix.flowui.Dialogs;
 import io.jmix.flowui.action.DialogAction;
 import io.jmix.flowui.component.HasRequired;
@@ -67,14 +60,13 @@ public class RulePropertyConditionFragment extends FragmentRenderer<HorizontalLa
     @ViewComponent private JmixButton resetButton;
 
     @Autowired private Metadata metadata;
-    @Autowired private MetadataTools metadataTools;
     @Autowired private Messages messages;
-    @Autowired private MessageTools messageTools;
     @Autowired private Dialogs dialogs;
     @Autowired private SingleFilterSupport singleFilterSupport;
     @Autowired private PropertyFilterSupport propertyFilterSupport;
     @Autowired private ObjectToStringConverter objectToStringConverter;
     @Autowired private Copier copier;
+    @Autowired private RulePropertyConditionsHelper conditionsHelper;
 
     @Setter private Consumer<RulePropertyCondition> itemChangeDelegate;
     @Setter private BiConsumer<RulePropertyConditionFragment, RulePropertyCondition> removeDelegate;
@@ -83,11 +75,11 @@ public class RulePropertyConditionFragment extends FragmentRenderer<HorizontalLa
     private String itemInitialHash;
     private Component valueComponent;
     private boolean mustDisplayLabels;
-    private final Map<String, Collection<MetaProperty>> propertiesCache = new HashMap<>();
 
     @Subscribe
     public void onReady(final ReadyEvent event) {
-        initEntityMetaClassField();
+        ComponentUtils.setItemsMap(entityMetaClassField, conditionsHelper.getEntityMetaClasses());
+
         operationField.setItemLabelGenerator(op -> propertyFilterSupport.getOperationText(op));
     }
 
@@ -159,20 +151,6 @@ public class RulePropertyConditionFragment extends FragmentRenderer<HorizontalLa
         }
     }
 
-    private void initEntityMetaClassField() {
-        Map<String, String> metaClassesItemssMap = new TreeMap<>();
-        Collection<MetaClass> classes = metadata.getSession().getClasses();
-
-        for (MetaClass clazz : classes) {
-            if (!metadataTools.isSystemLevel(clazz) && !fetchMetaProperties(clazz).isEmpty()) {
-                String caption = messageTools.getEntityCaption(clazz);
-                metaClassesItemssMap.put(clazz.getName(), caption);
-            }
-        }
-
-        ComponentUtils.setItemsMap(entityMetaClassField, metaClassesItemssMap);
-    }
-
     private void initPropertyField() {
         String entityMetaClass = entityMetaClassField.getValue();
 
@@ -182,7 +160,7 @@ public class RulePropertyConditionFragment extends FragmentRenderer<HorizontalLa
             return;
         }
 
-        List<String> properties = fetchMetaProperties(metadata.getClass(entityMetaClass)).stream()
+        List<String> properties = conditionsHelper.getMetaProperties(metadata.getClass(entityMetaClass)).stream()
             .map(MetadataObject::getName)
             .sorted()
             .collect(Collectors.toList());
@@ -245,24 +223,6 @@ public class RulePropertyConditionFragment extends FragmentRenderer<HorizontalLa
                 });
             });
         }
-    }
-
-    private Collection<MetaProperty> fetchMetaProperties(final MetaClass metaClass) {
-        return propertiesCache.computeIfAbsent(metaClass.getName(), k -> metaClass.getOwnProperties().stream()
-            .filter(mp -> {
-                return !metadataTools.isSystemLevel(mp) && mp.getRange().getCardinality() == Range.Cardinality.NONE;
-
-                //TODO do we need to support references to other entities
-//                if (mp.getRange().getCardinality().isMany()) {
-//                    try {
-//                        String viewId = viewRegistry.getAvailableLookupViewId(mp.getRange().asClass());
-//                        return viewRegistry.hasView(viewId);
-//
-//                    } catch (IllegalStateException e) {
-//                        return false;
-//                    }
-//                }
-            }).toList());
     }
 
     private void checkItemChange() {

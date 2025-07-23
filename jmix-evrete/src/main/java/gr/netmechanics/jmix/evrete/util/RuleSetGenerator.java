@@ -1,4 +1,4 @@
-package gr.netmechanics.jmix.evrete;
+package gr.netmechanics.jmix.evrete.util;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,8 +12,6 @@ import java.util.Optional;
 
 import gr.netmechanics.jmix.evrete.entity.Rule;
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
-import gr.netmechanics.jmix.evrete.util.JavaFormatter;
-import gr.netmechanics.jmix.evrete.util.JavaNamingUtil;
 import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
 import jakarta.annotation.PostConstruct;

@@ -21,8 +21,6 @@ import lombok.Setter;
 @Setter
 @SystemLevel
 @JmixEntity(name = "evrete_RulePropertyCondition")
-//TODO create a mechanism that will allow developer through properties toy select
-// which class and properties will be available is selectors through annotations
 public class RulePropertyCondition {
     @JmixId
     @JmixGeneratedValue

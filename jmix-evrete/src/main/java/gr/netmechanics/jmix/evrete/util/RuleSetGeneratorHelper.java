@@ -1,4 +1,4 @@
-package gr.netmechanics.jmix.evrete;
+package gr.netmechanics.jmix.evrete.util;
 
 import static gr.netmechanics.jmix.evrete.util.ExpressionGenerator.generateExpression;
 
@@ -18,7 +18,6 @@ import gr.netmechanics.jmix.evrete.entity.RuleActionDefinition;
 import gr.netmechanics.jmix.evrete.entity.RuleMetadata;
 import gr.netmechanics.jmix.evrete.entity.RulePropertyCondition;
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
-import gr.netmechanics.jmix.evrete.util.JavaNamingUtil;
 import io.jmix.core.Metadata;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -147,7 +146,18 @@ public class RuleSetGeneratorHelper {
             .replace("\t", "");
     }
 
-    Optional<Pair<RuleActionDefinition, RuleAction>> getRuleActionPair(final RuleMetadata metadata) {
+    public Stream<RuleAction> getRuleActions(final RuleSet ruleSet) {
+        return getRules(ruleSet)
+            .map(r -> getRuleAction(r.getRuleMetadata()).orElse(null))
+            .filter(Objects::nonNull)
+            .distinct();
+    }
+
+    public String getRuleActionName(final RuleAction action) {
+        return "$$%s".formatted(JavaNamingUtil.getParameterName(action.getClass().getSimpleName()));
+    }
+
+    private Optional<Pair<RuleActionDefinition, RuleAction>> getRuleActionPair(final RuleMetadata metadata) {
         RuleActionDefinition actionDefinition = metadata.getAction();
         if (actionDefinition == null) {
             return Optional.empty();
@@ -161,26 +171,15 @@ public class RuleSetGeneratorHelper {
         return Optional.of(Pair.of(actionDefinition, action));
     }
 
-    Optional<RuleAction> getRuleAction(final RuleMetadata metadata) {
+    private Optional<RuleAction> getRuleAction(final RuleMetadata metadata) {
         return getRuleActionPair(metadata).map(Pair::getRight);
     }
 
-    String getRuleActionName(final RuleAction action) {
-        return "$$%s".formatted(JavaNamingUtil.getParameterName(action.getClass().getSimpleName()));
-    }
-
-    Stream<Rule> getRules(final RuleSet ruleSet) {
+    private Stream<Rule> getRules(final RuleSet ruleSet) {
         return Optional.ofNullable(ruleSet.getRules())
             .orElse(Collections.emptyList())
             .stream()
             .filter(Rule::isApplicable);
-    }
-
-    Stream<RuleAction> getRuleActions(final RuleSet ruleSet) {
-        return getRules(ruleSet)
-            .map(r -> getRuleAction(r.getRuleMetadata()).orElse(null))
-            .filter(Objects::nonNull)
-            .distinct();
     }
 
     @RequiredArgsConstructor
