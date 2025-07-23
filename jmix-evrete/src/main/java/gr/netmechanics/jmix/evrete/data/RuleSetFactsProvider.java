@@ -6,9 +6,9 @@ import org.evrete.api.RuleSession;
 /**
  * @author Panos Bariamis (pbaris)
  */
-public interface RuleSetDataProvider {
+public interface RuleSetFactsProvider {
 
-    Iterable<?> getData(final RuleSet ruleSet, final RuleSession<?> session);
+    Iterable<?> getFacts(final RuleSet ruleSet, final RuleSession<?> session);
 
     default boolean isApplicable(final RuleSet ruleSet, final RuleSession<?> session) {
         return true;

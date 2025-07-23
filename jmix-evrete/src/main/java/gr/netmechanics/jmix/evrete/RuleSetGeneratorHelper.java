@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import gr.netmechanics.jmix.evrete.action.RuleAction;
 import gr.netmechanics.jmix.evrete.entity.Rule;
@@ -40,33 +41,39 @@ public class RuleSetGeneratorHelper {
 
     @SuppressWarnings("unused")
     public String writeImports(final RuleSet ruleSet) {
-        return Optional.ofNullable(ruleSet.getRules())
-            .orElse(Collections.emptyList())
-            .stream()
-            .filter(Rule::isApplicable)
+        return getRules(ruleSet)
             .flatMap(r -> {
-                List<String> lala = new ArrayList<>();
+                List<String> imports = new ArrayList<>();
                 RuleMetadata ruleMetadata = r.getRuleMetadata();
 
                 // Property Conditions
                 if (CollectionUtils.isNotEmpty(ruleMetadata.getPropertyConditions())) {
                     ruleMetadata.getPropertyConditions().stream()
                         .map(rpc -> metadata.getClass(rpc.getEntityMetaClass()).getJavaClass().getCanonicalName())
-                        .collect(Collectors.toCollection(() -> lala));
+                        .collect(Collectors.toCollection(() -> imports));
                 }
 
                 // Action
-                getRuleAction(ruleMetadata).ifPresent(pair -> {
-                    RuleAction action = pair.getRight();
-                    if (action != null) {
-                        lala.add(action.getClass().getCanonicalName());
-                    }
-                });
+                getRuleAction(ruleMetadata).ifPresent(action -> imports.add(action.getClass().getCanonicalName()));
 
-                return lala.stream();
+                return imports.stream();
             })
             .map(i -> "import " + i + ";")
             .distinct()
+            .collect(Collectors.joining("\n"));
+    }
+
+    @SuppressWarnings("unused")
+    public String writeClassProperties(final RuleSet ruleSet) {
+        return getRuleActions(ruleSet)
+            .map(action -> "private %s %s;".formatted(action.getClass().getSimpleName(), getRuleActionName(action)))
+            .collect(Collectors.joining("\n"));
+    }
+
+    @SuppressWarnings("unused")
+    public String loadClassProperties(final RuleSet ruleSet) {
+        return getRuleActions(ruleSet)
+            .map(action -> "%1$s = event.getSession().get(\"%1$s\");".formatted(getRuleActionName(action)))
             .collect(Collectors.joining("\n"));
     }
 
@@ -102,13 +109,6 @@ public class RuleSetGeneratorHelper {
                 .collect(Collectors.toCollection(() -> parameters));
         }
 
-        getRuleAction(ruleMetadata).ifPresent(pair -> {
-            RuleAction action = pair.getRight();
-            if (action != null) {
-                parameters.add("final %s %s".formatted(action.getClass().getSimpleName(), getRuleActionParameterName(action)));
-            }
-        });
-
         parameters.add("final RhsContext ctx");
         return String.join(", ", parameters);
     }
@@ -117,7 +117,7 @@ public class RuleSetGeneratorHelper {
     public String writeMethodBody(final Rule rule) {
         StringBuilder sb = new StringBuilder();
 
-        getRuleAction(rule.getRuleMetadata()).ifPresent(pair -> {
+        getRuleActionPair(rule.getRuleMetadata()).ifPresent(pair -> {
             RuleActionDefinition actionDefinition = pair.getLeft();
             if (StringUtils.isNotBlank(actionDefinition.getCode())) {
                 sb.append(actionDefinition.getCode()).append("\n");
@@ -125,14 +125,29 @@ public class RuleSetGeneratorHelper {
 
             RuleAction action = pair.getRight();
             if (action != null) {
-                sb.append(getRuleActionParameterName(action)).append(".execute(ctx);");
+                sb.append(getRuleActionName(action)).append(".execute(ctx);");
             }
         });
 
         return sb.isEmpty() ? null : sb.toString();
     }
 
-    Optional<Pair<RuleActionDefinition, RuleAction>> getRuleAction(final RuleMetadata metadata) {
+    @SuppressWarnings("unused")
+    public String writeName(String name) {
+        if (StringUtils.isBlank(name)) {
+            return "Undefined";
+        }
+
+        return name
+            .replace("\\", "\\\\")
+            .replace("\"", "\\\"")
+            .replace("\n", "")
+            .replace("\b", "")
+            .replace("\r", "")
+            .replace("\t", "");
+    }
+
+    Optional<Pair<RuleActionDefinition, RuleAction>> getRuleActionPair(final RuleMetadata metadata) {
         RuleActionDefinition actionDefinition = metadata.getAction();
         if (actionDefinition == null) {
             return Optional.empty();
@@ -146,8 +161,26 @@ public class RuleSetGeneratorHelper {
         return Optional.of(Pair.of(actionDefinition, action));
     }
 
-    String getRuleActionParameterName(final RuleAction action) {
+    Optional<RuleAction> getRuleAction(final RuleMetadata metadata) {
+        return getRuleActionPair(metadata).map(Pair::getRight);
+    }
+
+    String getRuleActionName(final RuleAction action) {
         return "$$%s".formatted(JavaNamingUtil.getParameterName(action.getClass().getSimpleName()));
+    }
+
+    Stream<Rule> getRules(final RuleSet ruleSet) {
+        return Optional.ofNullable(ruleSet.getRules())
+            .orElse(Collections.emptyList())
+            .stream()
+            .filter(Rule::isApplicable);
+    }
+
+    Stream<RuleAction> getRuleActions(final RuleSet ruleSet) {
+        return getRules(ruleSet)
+            .map(r -> getRuleAction(r.getRuleMetadata()).orElse(null))
+            .filter(Objects::nonNull)
+            .distinct();
     }
 
     @RequiredArgsConstructor

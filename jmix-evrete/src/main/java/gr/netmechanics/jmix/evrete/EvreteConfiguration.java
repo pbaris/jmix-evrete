@@ -26,6 +26,8 @@ public class EvreteConfiguration {
     //TODO add property to filter entities in RulePropertyConditions if user wants it
     // maybe create an annotation for selection
 
+    //TODO DefaultRuleSetFactsProvider
+
     @Bean(name = "evrete_KnowledgeService", destroyMethod = "shutdown")
     public KnowledgeService knowledgeService() {
         return new KnowledgeService();
