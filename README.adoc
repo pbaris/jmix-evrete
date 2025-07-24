@@ -4,7 +4,7 @@ image::https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?styl
 
 == What is Evrete?
 
- Evrete is a standard-compliant, lightweight, open-source, and developer-friendly Java Rule Engine for goals of any size and complexity.
+Evrete is a standard-compliant, lightweight, open-source, and developer-friendly Java Rule Engine for goals of any size and complexity.
 
 https://www.evrete.org[www.evrete.org, window=_blank]
 
@@ -12,7 +12,7 @@ https://www.evrete.org[www.evrete.org, window=_blank]
 
 The Jmix Evrete add-on adds a user-friendly interface for RuleSet and Rule management based on Evrete's DSL (Annotated Java Rules). You can create, configure, and manage RuleSet and Rules with just a few clicks, directly within your Jmix application at runtime.
 
-image:./docs/rulset1.png[width=412,target=_blank]
-image:./docs/rulset2.png[width=412,target=_blank]
-image:./docs/rulset3.png[width=412,target=_blank]
-image:./docs/rulset4.png[width=412,target=_blank]
+image:./docs/rulset1.png[width=412]
+image:./docs/rulset2.png[width=412]
+image:./docs/rulset3.png[width=412]
+image:./docs/rulset4.png[width=412]
