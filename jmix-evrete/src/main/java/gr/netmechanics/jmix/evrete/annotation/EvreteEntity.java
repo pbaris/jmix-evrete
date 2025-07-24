@@ -17,7 +17,6 @@ public @interface EvreteEntity {
     /**
      * By default, only properties explicitly annotated with {@link EvreteProperty} are included in rule property conditions.
      * Set this attribute to false in order to include all properties of the class.
-     *
      */
     boolean annotatedPropertiesOnly() default true;
 }
