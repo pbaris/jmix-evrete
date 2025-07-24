@@ -31,7 +31,7 @@ implementation 'gr.netmechanics.jmix:jmix-evrete-starter:<addon-version>'
 
 == Usage
 
-=== UI
+=== From the UI
 
 This UI provides a user-friendly interface for working with the Evrete rule engine, leveraging its *Annotated Java Rules API*.
 
@@ -42,7 +42,7 @@ WARNING: Add-on supports the following annotations `@RuleSet`, `@Rule` and `@Whe
 RuleSet and Rule Management::
 Easily create, modify, and organize your RuleSets and the individual Rules within them through a user-friendly interface.
 
-Condition and Action Definition::
+Property Conditions and Action Definition::
 Define property conditions for your rules and specify the actions to be executed when those conditions are met.
 +
 image::./docs/rulset1.png[]
@@ -66,8 +66,9 @@ Access detailed execution logs to monitor and troubleshoot rule processing effec
 image::./docs/executionlog1.png[]
 
 === Via Code
+Although the UI is user-friendly, certain tasks still need to be performed via code.
 
-Although the friendly UI, some things have to be done via code.
+==== Property Conditions Entities
 
 ==== Rule Actions
 
@@ -95,7 +96,13 @@ public class LoggerRuleAction extends RuleAction {
 
 ==== Facts Provider
 
-To supply the RuleSet with data during execution, implement the `gr.netmechanics.jmix.evrete.facts.FactsProvider` interface by creating a class that returns the required facts. This class should extract real facts from the application's context and, when needed, substitute them with sample for testing purposes.
+To supply the RuleSet with facts during execution, implement the `gr.netmechanics.jmix.evrete.facts.FactsProvider` interface by creating a class that returns the necessary facts. This class should gather real facts from the application's context and, when needed, replace them with sample ones for testing scenarios.
+
+===== DefaultFactsProvider
+
+The `DefaultFactsProvider` automatically scans the executed RuleSet for referenced JPA entities based on the property conditions defined in the rules. It then loads the corresponding data from the database and supplies them as facts to the rule engine.
+
+The `DefaultFactsProvider` is automatically applied when the selection mode for the property condition entities is set to `NORMAL`, otherwise is not used. However, this behavior is configurable.
 
 == Configuration
 
