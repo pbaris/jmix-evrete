@@ -58,9 +58,11 @@ public class RuleSetExecutionService {
 
             // Add Facts
             factsProviders.orderedStream()
-                .filter(fp -> fp.isApplicable(ruleSet, session))
+                .filter(fp -> fp.isApplicable(ruleSet, session, executionType))
                 .forEach(fp -> {
-                    Iterable<?> facts = fp.getFacts(ruleSet, session);
+                    Iterable<?> facts = executionType == ExecutionType.NORMAL
+                        ? fp.getFacts(ruleSet, session) : fp.getTestFacts(ruleSet, session);
+
                     if (facts != null && facts.iterator().hasNext()) {
                         session.insert(facts);
                     }

@@ -40,10 +40,10 @@
 				<action id="removeAction" type="list_remove"/>
 			</actions>
 			<columns>
-				<column property="name" autoWidth="true"/>
+				<column property="name" autoWidth="true" filterable="true"/>
 				<column property="description" autoWidth="true"/>
-				<column property="defaultSort" autoWidth="true"/>
-				<column property="active" autoWidth="true"/>
+				<column property="defaultSort" autoWidth="true" filterable="true"/>
+				<column property="active" autoWidth="true" filterable="true"/>
 			</columns>
 		</dataGrid>
 		<hbox id="lookupActions" visible="false">

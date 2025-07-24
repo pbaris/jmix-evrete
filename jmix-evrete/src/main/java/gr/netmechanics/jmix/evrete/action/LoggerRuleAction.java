@@ -1,6 +1,5 @@
 package gr.netmechanics.jmix.evrete.action;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.evrete.api.RhsContext;
 import org.evrete.api.RuntimeRule;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Component;
  * @author Panos Bariamis (pbaris)
  */
 @Slf4j
-@RequiredArgsConstructor
 @Component("evrete_LoggerRuleAction")
 public class LoggerRuleAction extends RuleAction {
 

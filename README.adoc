@@ -12,11 +12,6 @@ https://www.evrete.org[www.evrete.org, window=_blank]
 
 The Jmix Evrete add-on adds a user-friendly interface for RuleSet and Rule management based on Evrete's DSL (Annotated Java Rules). You can create, configure, and manage RuleSet and Rules with just a few clicks, directly within your Jmix application at runtime.
 
-image:./docs/rulset1.png[width=412]
-image:./docs/rulset2.png[width=412]
-image:./docs/rulset3.png[width=412]
-image:./docs/rulset4.png[width=412]
-
 == Installation
 
 The following table shows which version of the add-on is compatible with which version of the platform:
@@ -60,7 +55,7 @@ image::./docs/rulset3.png[]
 image::./docs/rulset4.png[]
 
 RuleSet Testing::
-Users can test rule execution directly from the UI before saving the modified RuleSet.
+Users can test RuleSet execution directly from the UI, using sample or real facts.
 
 Manual RuleSet Execution::
 You can trigger RuleSet executions manually or schedule them automatically using the Quartz add-on (programmatically).
@@ -69,6 +64,38 @@ Execution Logs::
 Access detailed execution logs to monitor and troubleshoot rule processing effectively.
 +
 image::./docs/executionlog1.png[]
+
+=== Via Code
+
+Although the friendly UI, some things have to be done via code.
+
+==== Rule Actions
+
+To define actions for the rules, implement the `gr.netmechanics.jmix.evrete.action.RuleAction` interface by creating a class that overrides its method(s) to specify the desired behavior when a rule is triggered.
+
+.example RuleAction
+[source,java]
+----
+@Slf4j
+@Component("evrete_LoggerRuleAction")
+public class LoggerRuleAction extends RuleAction {
+
+    @Override
+    public void execute(final RhsContext ctx) {
+        RuntimeRule rule = ctx.getRule();
+        log.info("Rule [{}] executed", rule.getName());
+    }
+
+    @Override
+    public String getHelpText() {
+        return "Logs rule execution details using the logger";
+    }
+}
+----
+
+==== Facts Provider
+
+To supply the RuleSet with data during execution, implement the `gr.netmechanics.jmix.evrete.facts.FactsProvider` interface by creating a class that returns the required facts. This class should extract real facts from the application's context and, when needed, substitute them with sample for testing purposes.
 
 == Configuration
 

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import gr.netmechanics.jmix.evrete.EvreteProperties;
+import gr.netmechanics.jmix.evrete.entity.ExecutionType;
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
 import gr.netmechanics.jmix.evrete.util.RuleSetGeneratorTools;
 import io.jmix.core.DataManager;
@@ -55,10 +56,11 @@ public class DefaultFactsProvider implements FactsProvider {
      *
      * @param ruleSet the active rule set (unused in this implementation)
      * @param session the current rule session (unused in this implementation)
+     * @param executionType the current rule set execution type (unused in this implementation)
      * @return {@code true} if this provider is applicable, according to the configuration; {@code false} otherwise
      */
     @Override
-    public boolean isApplicable(final RuleSet ruleSet, final RuleSession<?> session) {
+    public boolean isApplicable(final RuleSet ruleSet, final RuleSession<?> session, final ExecutionType executionType) {
         return switch (properties.getEntitySelectionMode()) {
             case NORMAL -> !properties.isDefaultFactsProviderForceNormalInapplicable();
             case ANNOTATED -> properties.isDefaultFactsProviderForceAnnotatedApplicable();
