@@ -33,7 +33,7 @@ implementation 'gr.netmechanics.jmix:jmix-evrete-starter:<addon-version>'
 
 === From the UI
 
-This UI provides a user-friendly interface for working with the Evrete rule engine, leveraging its *Annotated Java Rules API*.
+The UI provides a user-friendly interface for working with the Evrete rule engine, leveraging its *Annotated Java Rules API*.
 
 WARNING: Add-on supports the following annotations `@RuleSet`, `@Rule` and `@Where` only.
 
