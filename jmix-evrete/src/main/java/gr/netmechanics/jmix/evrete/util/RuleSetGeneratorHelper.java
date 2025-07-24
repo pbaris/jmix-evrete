@@ -90,7 +90,8 @@ public class RuleSetGeneratorHelper {
             .filter(RulePropertyCondition::isApplicable)
             .map(transformer::transform)
             .filter(Objects::nonNull)
-            .collect(Collectors.toSet());
+            .distinct()
+            .collect(Collectors.toList());
 
         return conditions.isEmpty() ? "" : "@Where(value = {\"%s\"})".formatted(String.join("\", \"", conditions));
     }

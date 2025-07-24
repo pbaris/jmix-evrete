@@ -58,10 +58,11 @@ public class RuleEditorFragment extends Fragment<VerticalLayout> {
 
     @Subscribe(id = "ruleDc", target = Target.DATA_CONTAINER)
     public void onRuleDcItemChange(final InstanceContainer.ItemChangeEvent<Rule> event) {
+        if (event.getPrevItem() != null) {
+            notifyRuleMetadataChanged(event.getPrevItem());
+        }
+
         if (event.getItem() == null) {
-            if (event.getPrevItem() != null) {
-                notifyRuleMetadataChanged(event.getPrevItem());
-            }
             ruleMetadataToEdit = null;
             propertyConditionsContainer.removeAll();
             actionSelector.clear();
@@ -69,7 +70,7 @@ public class RuleEditorFragment extends Fragment<VerticalLayout> {
             return;
         }
 
-        ruleMetadataToEdit = Optional.ofNullable(ruleDc.getItem().getRuleMetadata()).orElseGet(RuleMetadata::new);
+        ruleMetadataToEdit = Optional.ofNullable(event.getItem().getRuleMetadata()).orElseGet(RuleMetadata::new);
 
         if (ruleMetadataToEdit.getAction() == null) {
             ruleMetadataToEdit.setAction(dataManager.create(RuleActionDefinition.class));
