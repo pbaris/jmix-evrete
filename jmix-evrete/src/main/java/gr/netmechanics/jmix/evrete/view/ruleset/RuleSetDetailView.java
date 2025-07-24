@@ -15,7 +15,6 @@ import gr.netmechanics.jmix.evrete.entity.RuleSet;
 import gr.netmechanics.jmix.evrete.entity.RuleSetExecutionLog;
 import gr.netmechanics.jmix.evrete.entity.RuleSetSort;
 import gr.netmechanics.jmix.evrete.util.JsonUtil;
-import gr.netmechanics.jmix.evrete.view.rule.RuleDetailFragment;
 import io.jmix.core.EntityStates;
 import io.jmix.flowui.Dialogs;
 import io.jmix.flowui.Notifications;
@@ -103,17 +102,6 @@ public class RuleSetDetailView extends StandardDetailView<RuleSet> {
             adjustRuleEditorTab();
             ruleSetTabSheet.setSelectedIndex(RULE_EDITOR_TAB_INDEX);
         }
-    }
-
-    @Subscribe
-    public void onValidation(final ValidationEvent event) {
-        Tab ruleEditorTab = ruleSetTabSheet.getTabAt(RULE_EDITOR_TAB_INDEX);
-        ruleEditorTab.setEnabled(true);
-
-        ruleSetTabSheet.setSelectedIndex(RULE_EDITOR_TAB_INDEX);
-
-        Optional.ofNullable(ruleSetTabSheet.getContentByTab(ruleEditorTab))
-            .ifPresent(cmp -> ((RuleDetailFragment) cmp).onValidation(event));
     }
 
     // ttfm: ignore inspection

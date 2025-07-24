@@ -17,21 +17,17 @@ import gr.netmechanics.jmix.evrete.entity.RuleMetadata;
 import gr.netmechanics.jmix.evrete.entity.RulePropertyCondition;
 import io.jmix.core.DataManager;
 import io.jmix.flowui.Fragments;
-import io.jmix.flowui.component.UiComponentUtils;
 import io.jmix.flowui.component.codeeditor.CodeEditor;
 import io.jmix.flowui.component.select.JmixSelect;
-import io.jmix.flowui.component.validation.ValidationErrors;
 import io.jmix.flowui.fragment.Fragment;
 import io.jmix.flowui.fragment.FragmentDescriptor;
 import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.kit.component.codeeditor.CodeEditorMode;
 import io.jmix.flowui.model.InstanceContainer;
-import io.jmix.flowui.view.StandardDetailView.ValidationEvent;
 import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.Supply;
 import io.jmix.flowui.view.Target;
 import io.jmix.flowui.view.ViewComponent;
-import io.jmix.flowui.view.ViewValidation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,17 +35,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * @author Panos Bariamis (pbaris)
  */
-@FragmentDescriptor("rule-detail-fragment.xml")
-public class RuleDetailFragment extends Fragment<VerticalLayout> {
+@FragmentDescriptor("rule-editor-fragment.xml")
+public class RuleEditorFragment extends Fragment<VerticalLayout> {
     @ViewComponent private InstanceContainer<Rule> ruleDc;
     @ViewComponent private VerticalLayout propertyConditionsContainer;
     @ViewComponent private CodeEditor actionEditor;
     @ViewComponent private JmixSelect<RuleAction> actionSelector;
-    @ViewComponent private VerticalLayout actionContainer;
 
     @Autowired private Fragments fragments;
     @Autowired private DataManager dataManager;
-    @Autowired private ViewValidation viewValidation;
     @Autowired private ObjectProvider<RuleAction> actionProvider;
 
     private RuleMetadata ruleMetadataToEdit;
@@ -134,24 +128,6 @@ public class RuleDetailFragment extends Fragment<VerticalLayout> {
         notifyRuleMetadataChanged(ruleDc.getItem());
     }
 
-    //TODO do we need it? should/can action be required
-    public void onValidation(final ValidationEvent event) {
-        UiComponentUtils.getOwnComponents(propertyConditionsContainer).forEach(cmp -> {
-            RulePropertyConditionFragment fragment = (RulePropertyConditionFragment) cmp;
-            ValidationErrors validationErrors = viewValidation.validateUiComponents(fragment.getContent());
-            if (!validationErrors.isEmpty()) {
-                event.addErrors(validationErrors);
-            }
-        });
-
-        if (ruleMetadataToEdit != null) {
-            ValidationErrors validationErrors = viewValidation.validateUiComponents(actionContainer);
-            if (!validationErrors.isEmpty()) {
-                event.addErrors(validationErrors);
-            }
-        }
-    }
-
     private void notifyRuleMetadataChanged(final Rule item) {
         RuleMetadata newMetadata = new RuleMetadata();
         newMetadata.setAction(ruleMetadataToEdit.getAction());
@@ -197,6 +173,8 @@ public class RuleDetailFragment extends Fragment<VerticalLayout> {
     }
 
     private void bindRuleAction() {
+        actionSelector.clear();
+        actionEditor.clear();
         RuleActionDefinition actionDefinition = ruleMetadataToEdit.getAction();
 
         actionProvider.stream()

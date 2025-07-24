@@ -23,9 +23,6 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource(name = "gr.netmechanics.jmix.evrete", value = "classpath:/gr/netmechanics/jmix/evrete/module.properties")
 public class EvreteConfiguration {
 
-    //TODO add property to filter entities in RulePropertyConditions if user wants it
-    // maybe create an annotation for selection
-
     //TODO DefaultRuleSetFactsProvider
 
     @Bean(name = "evrete_KnowledgeService", destroyMethod = "shutdown")

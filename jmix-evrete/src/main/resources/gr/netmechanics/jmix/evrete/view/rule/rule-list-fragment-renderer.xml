@@ -18,7 +18,7 @@
 				<div classNames="mx-auto"/>
 				<div id="activePlaceholder"/>
 			</hbox>
-			<hr classNames="p-0 m-0"/>
+			<hr id="ruleSeparator" classNames="p-0 m-0"/>
 		</vbox>
 	</content>
 </fragment>

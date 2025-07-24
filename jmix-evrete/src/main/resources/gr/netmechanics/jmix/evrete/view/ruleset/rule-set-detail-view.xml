@@ -38,7 +38,7 @@
 					</formLayout>
 				</tab>
 				<tab id="ruleEditorTab" label="msg://ruleSetDetailView.tab.ruleEditor">
-					<fragment class="gr.netmechanics.jmix.evrete.view.rule.RuleDetailFragment"/>
+					<fragment class="gr.netmechanics.jmix.evrete.view.rule.RuleEditorFragment"/>
 				</tab>
 				<tab id="previewTab" label="msg://ruleSetDetailView.tab.preview">
 					<tabSheet id="previewTabSheet" themeNames="no-padding small" classNames="box-border" height="100%">
