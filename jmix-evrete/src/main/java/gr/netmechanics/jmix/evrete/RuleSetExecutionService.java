@@ -2,10 +2,10 @@ package gr.netmechanics.jmix.evrete;
 
 import java.time.LocalDateTime;
 
-import gr.netmechanics.jmix.evrete.data.RuleSetFactsProvider;
 import gr.netmechanics.jmix.evrete.entity.ExecutionType;
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
 import gr.netmechanics.jmix.evrete.entity.RuleSetExecutionLog;
+import gr.netmechanics.jmix.evrete.facts.FactsProvider;
 import gr.netmechanics.jmix.evrete.util.RuleSetGeneratorTools;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class RuleSetExecutionService {
     private final RuleSetExecutionLogService executionLogService;
     private final RuleSetGenerator ruleSetGenerator;
     private final RuleSetGeneratorTools generatorTools;
-    private final ObjectProvider<RuleSetFactsProvider> factsProviders;
+    private final ObjectProvider<FactsProvider> factsProviders;
 
     public RuleSetExecutionLog executeTest(final RuleSet ruleSet) {
         return execute(ruleSet, ExecutionType.TEST);
@@ -59,7 +59,12 @@ public class RuleSetExecutionService {
             // Add Facts
             factsProviders.orderedStream()
                 .filter(fp -> fp.isApplicable(ruleSet, session))
-                .forEach(fp -> session.insert(fp.getFacts(ruleSet, session)));
+                .forEach(fp -> {
+                    Iterable<?> facts = fp.getFacts(ruleSet, session);
+                    if (facts != null && facts.iterator().hasNext()) {
+                        session.insert(facts);
+                    }
+                });
 
             session.fire();
 

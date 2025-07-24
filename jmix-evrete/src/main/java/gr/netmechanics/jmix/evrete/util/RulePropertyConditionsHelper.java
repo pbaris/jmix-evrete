@@ -55,7 +55,7 @@ public class RulePropertyConditionsHelper {
             return false;
         }
 
-        if (evreteProperties.getEntitiesSelectionMode() == ANNOTATED && !isEvreteEntity(metaClass)) {
+        if (evreteProperties.getEntitySelectionMode() == ANNOTATED && !isEvreteEntity(metaClass)) {
             return false;
         }
 
@@ -67,7 +67,7 @@ public class RulePropertyConditionsHelper {
             return false;
         }
 
-        if (evreteProperties.getEntitiesSelectionMode() == ANNOTATED) {
+        if (evreteProperties.getEntitySelectionMode() == ANNOTATED) {
             return !useAnnotatedPropertiesOnly(metaClass) || isEvreteProperty(metaProperty);
         }
 

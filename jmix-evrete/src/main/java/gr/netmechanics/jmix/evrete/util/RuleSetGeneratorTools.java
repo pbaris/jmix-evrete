@@ -136,7 +136,7 @@ public class RuleSetGeneratorTools {
     }
 
     @SuppressWarnings("unused")
-    public String writeName(String name) {
+    public String writeName(final String name) {
         if (StringUtils.isBlank(name)) {
             return "Undefined";
         }
@@ -148,6 +148,17 @@ public class RuleSetGeneratorTools {
             .replace("\b", "")
             .replace("\r", "")
             .replace("\t", "");
+    }
+
+    public Stream<Rule> getRules(final RuleSet ruleSet) {
+        return Optional.ofNullable(ruleSet.getRules())
+            .orElse(Collections.emptyList())
+            .stream()
+            .filter(Rule::isApplicable);
+    }
+
+    public Optional<RuleAction> getRuleAction(final RuleMetadata metadata) {
+        return getRuleActionPair(metadata).map(Pair::getRight);
     }
 
     public Stream<RuleAction> getRuleActions(final RuleSet ruleSet) {
@@ -173,17 +184,6 @@ public class RuleSetGeneratorTools {
             .orElse(null);
 
         return Optional.of(Pair.of(actionDefinition, action));
-    }
-
-    private Optional<RuleAction> getRuleAction(final RuleMetadata metadata) {
-        return getRuleActionPair(metadata).map(Pair::getRight);
-    }
-
-    private Stream<Rule> getRules(final RuleSet ruleSet) {
-        return Optional.ofNullable(ruleSet.getRules())
-            .orElse(Collections.emptyList())
-            .stream()
-            .filter(Rule::isApplicable);
     }
 
     @RequiredArgsConstructor

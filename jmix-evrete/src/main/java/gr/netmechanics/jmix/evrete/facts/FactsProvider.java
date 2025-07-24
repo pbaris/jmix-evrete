@@ -1,4 +1,4 @@
-package gr.netmechanics.jmix.evrete.data;
+package gr.netmechanics.jmix.evrete.facts;
 
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
 import org.evrete.api.RuleSession;
@@ -6,7 +6,7 @@ import org.evrete.api.RuleSession;
 /**
  * @author Panos Bariamis (pbaris)
  */
-public interface RuleSetFactsProvider {
+public interface FactsProvider {
 
     Iterable<?> getFacts(final RuleSet ruleSet, final RuleSession<?> session);
 
