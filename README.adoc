@@ -48,7 +48,7 @@ RuleSet and Rule Management::
 Easily create, modify, and organize your RuleSets and the individual Rules within them through a user-friendly interface.
 
 Condition and Action Definition::
-Define precise property conditions for your rules and specify the actions to be executed when those conditions are met.
+Define property conditions for your rules and specify the actions to be executed when those conditions are met.
 +
 image::./docs/rulset1.png[]
 image::./docs/rulset2.png[]
