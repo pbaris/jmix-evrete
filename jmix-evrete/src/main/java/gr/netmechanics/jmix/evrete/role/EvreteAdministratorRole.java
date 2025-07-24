@@ -23,7 +23,7 @@ public interface EvreteAdministratorRole {
     String CODE = "evrete-admin";
 
     @MenuPolicy(menuIds = {"evrete_RuleSet.list", "evrete_RuleSetExecutionLog.list"})
-    @ViewPolicy(viewIds = {"evrete_RuleSet.list", "evrete_RuleSet.detail", "RuleDetailFragment", "RuleListFragmentRenderer", "evrete_Rule.detail", "evrete_RuleSetExecutionLog.detail", "evrete_RuleSetExecutionLog.list"})
+    @ViewPolicy(viewIds = {"evrete_RuleSet.list", "evrete_RuleSet.detail", "RuleDetailFragment", "RuleListFragmentRenderer", "evrete_Rule.detail", "evrete_RuleSetExecutionLog.detail", "evrete_RuleSetExecutionLog.list", "RulePropertyConditionFragment", "RuleEditorFragment"})
     void screens();
 
     @EntityAttributePolicy(entityClass = Rule.class, attributes = "*", action = EntityAttributePolicyAction.MODIFY)
