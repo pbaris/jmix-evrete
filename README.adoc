@@ -12,7 +12,7 @@ https://www.evrete.org[www.evrete.org, window=_blank]
 
 The Jmix Evrete add-on adds a user-friendly interface for RuleSet and Rule management based on Evrete's DSL (Annotated Java Rules). You can create, configure, and manage RuleSet and Rules with just a few clicks, directly within your Jmix application at runtime.
 
-image:./docs/rulset1.png[width=200]
-image:./docs/rulset2.png[width=200]
-image:./docs/rulset3.png[width=200]
-image:./docs/rulset4.png[width=200]
+image:./docs/rulset1.png[width=400]
+image:./docs/rulset2.png[width=400]
+image:./docs/rulset3.png[width=400]
+image:./docs/rulset4.png[width=400]
