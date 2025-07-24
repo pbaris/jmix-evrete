@@ -6,7 +6,7 @@ import gr.netmechanics.jmix.evrete.data.RuleSetFactsProvider;
 import gr.netmechanics.jmix.evrete.entity.ExecutionType;
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
 import gr.netmechanics.jmix.evrete.entity.RuleSetExecutionLog;
-import gr.netmechanics.jmix.evrete.util.RuleSetGeneratorHelper;
+import gr.netmechanics.jmix.evrete.util.RuleSetGeneratorTools;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.evrete.KnowledgeService;
@@ -25,7 +25,7 @@ public class RuleSetExecutionService {
     private final KnowledgeService knowledgeService;
     private final RuleSetExecutionLogService executionLogService;
     private final RuleSetGenerator ruleSetGenerator;
-    private final RuleSetGeneratorHelper ruleSetGeneratorHelper;
+    private final RuleSetGeneratorTools generatorTools;
     private final ObjectProvider<RuleSetFactsProvider> factsProviders;
 
     public RuleSetExecutionLog executeTest(final RuleSet ruleSet) {
@@ -53,8 +53,8 @@ public class RuleSetExecutionService {
             StatelessSession session = knowledge.newStatelessSession();
 
             // Add Rule Actions
-            ruleSetGeneratorHelper.getRuleActions(ruleSet)
-                .forEach(action -> session.set(ruleSetGeneratorHelper.getRuleActionName(action), action));
+            generatorTools.getRuleActions(ruleSet)
+                .forEach(action -> session.set(generatorTools.getRuleActionName(action), action));
 
             // Add Facts
             factsProviders.orderedStream()

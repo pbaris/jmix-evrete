@@ -6,22 +6,22 @@ import org.evrete.dsl.annotation.EventSubscription;
 import org.evrete.dsl.annotation.Rule;
 import org.evrete.dsl.annotation.RuleSet;
 import org.evrete.dsl.annotation.Where;
-${RS_HELPER.writeImports(RULE_SET)}
+${RSG_TOOLS.writeImports(RULE_SET)}
 
-@RuleSet(value = "${RS_HELPER.writeName(RULE_SET.name)}", defaultSort = RuleSet.Sort.${RULE_SET.defaultSort ?: 'BY_NAME'})
+@RuleSet(value = "${RSG_TOOLS.writeName(RULE_SET.name)}", defaultSort = RuleSet.Sort.${RULE_SET.defaultSort ?: 'BY_NAME'})
 public class ${RULE_SET_CLASS_NAME} {
-	${RS_HELPER.writeClassProperties(RULE_SET)}
+	${RSG_TOOLS.writeClassProperties(RULE_SET)}
 
 	@EventSubscription
 	public void sessionFireObserver(SessionFireEvent event) {
-		${RS_HELPER.loadClassProperties(RULE_SET)}
+		${RSG_TOOLS.loadClassProperties(RULE_SET)}
 	}
 
 <% RULES.eachWithIndex { rule, index -> %>
-	@Rule(value = "${RS_HELPER.writeName(rule.name)}", salience = ${(rule.priority ?: 0) * -1})
-	${RS_HELPER.writeWhere(rule)}
-	public void rule${index + 1}(${RS_HELPER.writeParameters(rule)}) {
-		${RS_HELPER.writeMethodBody(rule)}
+	@Rule(value = "${RSG_TOOLS.writeName(rule.name)}", salience = ${(rule.priority ?: 0) * -1})
+	${RSG_TOOLS.writeWhere(rule)}
+	public void rule${index + 1}(${RSG_TOOLS.writeParameters(rule)}) {
+		${RSG_TOOLS.writeMethodBody(rule)}
 	}
 
 <% } %>

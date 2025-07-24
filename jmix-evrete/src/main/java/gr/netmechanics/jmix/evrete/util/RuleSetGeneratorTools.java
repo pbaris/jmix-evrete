@@ -32,8 +32,8 @@ import org.springframework.stereotype.Component;
  * @author Panos Bariamis (pbaris)
  */
 @RequiredArgsConstructor
-@Component("evrete_RuleSetMarshallerHelper")
-public class RuleSetGeneratorHelper {
+@Component("evrete_RuleSetGeneratorTools")
+public class RuleSetGeneratorTools {
 
     private final Metadata metadata;
     private final ObjectProvider<RuleAction> actionProvider;

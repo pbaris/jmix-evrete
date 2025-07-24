@@ -14,7 +14,7 @@ import gr.netmechanics.jmix.evrete.entity.Rule;
 import gr.netmechanics.jmix.evrete.entity.RuleSet;
 import gr.netmechanics.jmix.evrete.util.JavaFormatter;
 import gr.netmechanics.jmix.evrete.util.JavaNamingUtil;
-import gr.netmechanics.jmix.evrete.util.RuleSetGeneratorHelper;
+import gr.netmechanics.jmix.evrete.util.RuleSetGeneratorTools;
 import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
 import jakarta.annotation.PostConstruct;
@@ -33,7 +33,7 @@ import org.springframework.util.FileCopyUtils;
 @Component("evrete_RuleSetMarshaller")
 public class RuleSetGenerator {
 
-    private final RuleSetGeneratorHelper generatorHelper;
+    private final RuleSetGeneratorTools generatorTools;
 
     private Template ruleSetTemplate;
 
@@ -61,7 +61,7 @@ public class RuleSetGenerator {
         String name = ruleSet.getName();
 
         Map<String, Object> model = new HashMap<>();
-        model.put("RS_HELPER", generatorHelper);
+        model.put("RSG_TOOLS", generatorTools);
         model.put("RULE_SET", ruleSet);
         model.put("RULE_SET_PACKAGE", JavaNamingUtil.getPackageName(name));
         model.put("RULE_SET_CLASS_NAME", JavaNamingUtil.getClassName(name));
