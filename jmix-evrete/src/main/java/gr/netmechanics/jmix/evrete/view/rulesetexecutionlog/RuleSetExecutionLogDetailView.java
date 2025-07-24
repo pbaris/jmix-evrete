@@ -3,6 +3,7 @@ package gr.netmechanics.jmix.evrete.view.rulesetexecutionlog;
 import com.vaadin.flow.router.Route;
 import gr.netmechanics.jmix.evrete.entity.RuleSetExecutionLog;
 import io.jmix.flowui.view.DefaultMainViewParent;
+import io.jmix.flowui.view.DialogMode;
 import io.jmix.flowui.view.EditedEntityContainer;
 import io.jmix.flowui.view.StandardDetailView;
 import io.jmix.flowui.view.ViewController;
@@ -16,5 +17,6 @@ import io.jmix.flowui.view.ViewDescriptor;
 @ViewController(id = "evrete_RuleSetExecutionLog.detail")
 @ViewDescriptor(path = "rule-set-execution-log-detail-view.xml")
 @EditedEntityContainer("ruleSetExecutionLogDc")
+@DialogMode(width = "100%", maxWidth = "60em")
 public class RuleSetExecutionLogDetailView extends StandardDetailView<RuleSetExecutionLog> {
 }

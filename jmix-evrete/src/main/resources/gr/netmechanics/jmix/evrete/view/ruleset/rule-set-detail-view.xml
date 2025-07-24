@@ -45,8 +45,8 @@
 						<tab id="sourceCodeTab" label="msg://ruleSetDetailView.tab.sourceCode">
 							<codeEditor id="sourceCodeEditor" readOnly="true" width="100%" height="100%" classNames="box-border"/>
 						</tab>
-						<tab id="executionDataTab" label="msg://gr.netmechanics.jmix.evrete.view.ruleset/ruleSetDetailView.tab.executionData">
-							<codeEditor id="executionDataEditor" readOnly="true" width="100%" height="100%" classNames="box-border"/>
+						<tab id="generatorDataTab" label="msg://gr.netmechanics.jmix.evrete.view.ruleset/ruleSetDetailView.tab.generatorData">
+							<codeEditor id="generatorDataEditor" readOnly="true" width="100%" height="100%" classNames="box-border"/>
 						</tab>
 						<suffix>
 							<button id="testButton" text="msg://ruleSetDetailView.button.test" themeNames="small" icon="PLAY"/>

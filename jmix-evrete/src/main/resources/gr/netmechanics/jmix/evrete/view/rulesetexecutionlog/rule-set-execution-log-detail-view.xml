@@ -34,8 +34,8 @@
 			<dateTimePicker id="executionStartAtField" property="executionStartAt"/>
 			<dateTimePicker id="executionEndAtField" property="executionEndAt"/>
 
-			<textArea id="errorMessageField" property="errorMessage" colspan="2" height="15em"/>
 			<textArea id="codeField" property="code" colspan="2" height="15em" />
+			<textArea id="errorMessageField" property="errorMessage" colspan="2" height="15em"/>
 		</formLayout>
 		<hbox id="detailActions">
 			<button id="saveAndCloseButton" action="saveAction"/>
