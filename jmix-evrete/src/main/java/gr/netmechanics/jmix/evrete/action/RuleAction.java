@@ -7,8 +7,6 @@ import org.evrete.api.RhsContext;
  */
 public abstract class RuleAction {
 
-
-    //TODO create an action to trigger this
     public abstract void execute(RhsContext ctx);
 
     public String getDisplayName() {

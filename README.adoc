@@ -113,12 +113,13 @@ The `DefaultFactsProvider` is automatically applied when the selection mode for 
 [[configuration]]
 == Configuration
 
-There are three properties available to configure the behavior of the add-on.
+There are four properties available to configure the behavior of the add-on.
 
 [options="header,autowidth",cols=",^,a"]
 |===
 |Property|Default|Description
 |jmix.evrete.entity-selection-mode|normal|Defines the selection mode for entities used in rule property conditions. Possible values `normal` or `annotated`.
-|jmix.evrete.default-facts-provider-force-annotated-applicable|false|Allows `DefaultFactsProvider` to be applicable when `entitySelectionMode` is `annotated`.
-|jmix.evrete.default-facts-provider-force-normal-inapplicable|false|Allows `DefaultFactsProvider` to be inapplicable when `entitySelectionMode` is `normal`.
+|jmix.evrete.default-facts-provider-force-inapplicable|false|Forces the `DefaultFactsProvider` to be inapplicable, regardless of the rest of the configuration.
+|jmix.evrete.default-facts-provider-force-annotated-applicable|false|Forces `DefaultFactsProvider` to be applicable when `entitySelectionMode` is `annotated`.
+|jmix.evrete.default-facts-provider-force-normal-inapplicable|false|Forces `DefaultFactsProvider` to be inapplicable when `entitySelectionMode` is `normal`.
 |===
