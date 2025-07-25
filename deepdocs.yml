@@ -1,0 +1,6 @@
+target:
+  - url: "docs/"
+
+include:  ["README.adoc"]
+
+reinit: "7WZWG47A6ZEMAHY0GZ7N"

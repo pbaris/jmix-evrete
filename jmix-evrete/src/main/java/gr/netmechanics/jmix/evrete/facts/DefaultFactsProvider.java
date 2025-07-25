@@ -48,8 +48,6 @@ public class DefaultFactsProvider implements FactsProvider {
      *
      * <p>The applicability is determined as follows:</p>
      * <ul>
-     *   <li>If the {@code defaultFactsProviderForceInapplicable} is set to {@code true},
-     *       the provider is inapplicable, regardless of the rest of the configuration.</li>
      *   <li>If the {@code entitySelectionMode} is {@code NORMAL}, the provider is applicable
      *       unless {@code defaultFactsProviderForceNormalInapplicable} is set to {@code true}.</li>
      *   <li>If the {@code entitySelectionMode} is {@code ANNOTATED}, the provider is applicable
@@ -63,10 +61,6 @@ public class DefaultFactsProvider implements FactsProvider {
      */
     @Override
     public boolean isApplicable(final RuleSet ruleSet, final RuleSession<?> session, final ExecutionType executionType) {
-        if (properties.isDefaultFactsProviderForceInapplicable()) {
-            return false;
-        }
-
         return switch (properties.getEntitySelectionMode()) {
             case NORMAL -> !properties.isDefaultFactsProviderForceNormalInapplicable();
             case ANNOTATED -> properties.isDefaultFactsProviderForceAnnotatedApplicable();
