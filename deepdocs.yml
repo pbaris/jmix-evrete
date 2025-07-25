@@ -1,5 +1,5 @@
 target:
-  - url: "."
+  - url: "docs/"
 
 include:  ["README.adoc"]
 
