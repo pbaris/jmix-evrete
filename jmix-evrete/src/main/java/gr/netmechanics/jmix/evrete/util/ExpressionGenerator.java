@@ -184,6 +184,19 @@ public class ExpressionGenerator {
         } else if (isBooleanType(javaType)) {
             // Convert to lowercase "true" or "false".
             return value.toLowerCase();
+
+        } else if (java.util.Date.class.equals(javaType)) {
+            // Expecting value as yyyy-MM-dd or yyyy-MM-ddTHH:mm:ss
+            return "new java.util.Date(java.time.Instant.parse(\\\"" + value + "\\\").toEpochMilli())";
+
+        } else if (java.time.LocalDate.class.equals(javaType)) {
+            return "java.time.LocalDate.parse(\\\"" + value + "\\\")";
+
+        } else if (java.time.LocalDateTime.class.equals(javaType)) {
+            return "java.time.LocalDateTime.parse(\\\"" + value + "\\\")";
+
+        } else if (java.time.ZonedDateTime.class.equals(javaType)) {
+            return "java.time.ZonedDateTime.parse(\\\"" + value + "\\\")";
         }
         // For numeric types, dates, etc., return the value as is.
         // It's assumed that the context evaluating the expression can parse these values.
