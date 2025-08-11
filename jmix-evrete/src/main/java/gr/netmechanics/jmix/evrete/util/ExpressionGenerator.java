@@ -224,37 +224,37 @@ public class ExpressionGenerator {
             // Handle LocalDate
             if (LocalDate.class.equals(javaType) || java.sql.Date.class.equals(javaType)) {
                 LocalDate.parse(value, DateTimeFormatter.ISO_LOCAL_DATE);
-                return String.format("%s.parse(\"%s\")", javaType.getName(), value);
+                return String.format("%s.parse(\\\"%s\\\")", javaType.getName(), value);
             }
 
             // Handle LocalDateTime
             if (LocalDateTime.class.equals(javaType) || java.sql.Timestamp.class.equals(javaType)) {
                 LocalDateTime.parse(value, FLEXIBLE_DATETIME_FORMATTER);
-                return String.format("%s.parse(\"%s\")", javaType.getName(), value);
+                return String.format("%s.parse(\\\"%s\\\")", javaType.getName(), value);
             }
 
             // Handle ZonedDateTime and OffsetDateTime
             if (ZonedDateTime.class.equals(javaType)) {
                 ZonedDateTime.parse(value, FLEXIBLE_DATETIME_FORMATTER);
-                return String.format("java.time.ZonedDateTime.parse(\"%s\")", value);
+                return String.format("java.time.ZonedDateTime.parse(\\\"%s\\\")", value);
             }
 
             if (OffsetDateTime.class.equals(javaType)) {
                 OffsetDateTime.parse(value, FLEXIBLE_DATETIME_FORMATTER);
-                return String.format("java.time.OffsetDateTime.parse(\"%s\")", value);
+                return String.format("java.time.OffsetDateTime.parse(\\\"%s\\\")", value);
             }
 
             // Handle Instant
             if (Instant.class.equals(javaType)) {
                 Instant.parse(value);
-                return String.format("java.time.Instant.parse(\"%s\")", value);
+                return String.format("java.time.Instant.parse(\\\"%s\\\")", value);
             }
 
             // Handle legacy java.util.Date
             if (Date.class.equals(javaType)) {
                 ZonedDateTime zonedDateTime = ZonedDateTime.parse(value, FLEXIBLE_DATETIME_FORMATTER);
                 return String.format("java.util.Date.from(%s.toInstant())",
-                    String.format("java.time.ZonedDateTime.parse(\"%s\")", value));
+                    String.format("java.time.ZonedDateTime.parse(\\\"%s\\\")", value));
             }
 
         } catch (DateTimeParseException e) {
