@@ -2,7 +2,8 @@ package gr.netmechanics.jmix.evrete.view.rule;
 
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -24,7 +25,6 @@ import io.jmix.core.Copier;
 import io.jmix.core.Messages;
 import io.jmix.core.Metadata;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.MetadataObject;
 import io.jmix.flowui.Dialogs;
 import io.jmix.flowui.action.DialogAction;
 import io.jmix.flowui.component.HasRequired;
@@ -83,7 +83,7 @@ public class RulePropertyConditionFragment extends FragmentRenderer<HorizontalLa
         operationField.setItemLabelGenerator(op -> propertyFilterSupport.getOperationText(op));
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Subscribe(id = "resetButton", subject = "clickListener")
     public void onResetButtonClick(final ClickEvent<JmixButton> event) {
         entityMetaClassField.setValue(itemInitial.getEntityMetaClass());
@@ -160,12 +160,15 @@ public class RulePropertyConditionFragment extends FragmentRenderer<HorizontalLa
             return;
         }
 
-        List<String> properties = conditionsHelper.getMetaProperties(metadata.getClass(entityMetaClass)).stream()
-            .map(MetadataObject::getName)
-            .sorted()
-            .collect(Collectors.toList());
+        Map<String, String> properties = conditionsHelper.getMetaProperties(metadata.getClass(entityMetaClass)).stream()
+            .map(mo -> Map.entry(
+                mo.getName(),
+                propertyFilterSupport.getPropertyFilterCaption(mo.getDomain(), mo.getName())
+            ))
+            .sorted(Map.Entry.comparingByValue())
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
-        propertyField.setItems(properties);
+        ComponentUtils.setItemsMap(propertyField, properties);
         propertyField.setEnabled(true);
     }
 
@@ -184,7 +187,7 @@ public class RulePropertyConditionFragment extends FragmentRenderer<HorizontalLa
         operationField.setEnabled(true);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private void initValueField() {
         String entityMetaClass = entityMetaClassField.getValue();
         String property = propertyField.getValue();
@@ -216,7 +219,11 @@ public class RulePropertyConditionFragment extends FragmentRenderer<HorizontalLa
 
         if (valueComponent instanceof HasValue hasValue) {
             Optional.ofNullable(getItem()).ifPresent(rpc -> {
-                hasValue.setValue(objectToStringConverter.convertFromString(metaClass.getProperty(property).getJavaType(), rpc.getValue()));
+                Object value = objectToStringConverter.convertFromString(metaClass.getProperty(property).getJavaType(), rpc.getValue());
+                if (value != null) {
+                    hasValue.setValue(value);
+                }
+
                 hasValue.addValueChangeListener(e -> {
                     rpc.setValue(objectToStringConverter.convertToString(e.getValue()));
                     checkItemChange();

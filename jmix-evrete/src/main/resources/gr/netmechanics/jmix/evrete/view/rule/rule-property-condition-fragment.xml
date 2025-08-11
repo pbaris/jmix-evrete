@@ -6,7 +6,7 @@
 	<content>
 		<hbox id="root" themeNames="spacing-xs" width="100%" alignItems="BASELINE">
 			<comboBox id="entityMetaClassField" property="entityMetaClass" dataContainer="rulePropertyConditionDc" width="100%" themeNames="small"/>
-			<comboBox id="propertyField" property="property" dataContainer="rulePropertyConditionDc" enabled="false" themeNames="small"/>
+			<comboBox id="propertyField" property="property" dataContainer="rulePropertyConditionDc" enabled="false" width="100%"  themeNames="small"/>
 			<comboBox id="operationField" property="operation" dataContainer="rulePropertyConditionDc" enabled="false" themeNames="small"/>
 			<textField id="valueFieldPlaceHolder" width="100%" themeNames="small" enabled="false"/>
 			<button id="resetButton" themeNames="small tertiary" icon="REFRESH" enabled="false"/>
