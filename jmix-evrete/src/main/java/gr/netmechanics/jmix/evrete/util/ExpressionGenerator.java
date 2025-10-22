@@ -82,6 +82,7 @@ public class ExpressionGenerator {
             case IN_LIST -> generateInListExpression(javaType, propertyPath, value, false);
             case NOT_IN_LIST -> generateInListExpression(javaType, propertyPath, value, true);
             case IN_INTERVAL -> generateIntervalExpression(javaType, propertyPath, value);
+            case DATE_EQUALS -> generateEqualExpression(javaType, propertyPath, value);
             case IS_COLLECTION_EMPTY -> generateCollectionEmptyExpression(propertyPath);
             case MEMBER_OF_COLLECTION -> generateCollectionMemberExpression(javaType, propertyPath, value, false);
             case NOT_MEMBER_OF_COLLECTION -> generateCollectionMemberExpression(javaType, propertyPath, value, true);
