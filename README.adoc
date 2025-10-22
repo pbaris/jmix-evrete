@@ -19,7 +19,8 @@ The following table shows which version of the add-on is compatible with which v
 [options="autowidth,header"]
 |===
 |Jmix Version|Add-on Version|Implementation
-|2.6.x|1.0.0|gr.netmechanics.jmix:jmix-evrete-starter:1.0.10
+|2.6.x|1.0.x|gr.netmechanics.jmix:jmix-evrete-starter:1.0.10
+|2.7.x|1.1.0|gr.netmechanics.jmix:jmix-evrete-starter:1.1.0
 |===
 
 For manual installation, add the following dependencies to your `build.gradle`:
